@@ -1,4 +1,5 @@
 using KnowledgeAssistant.Infrastructure;
+using KnowledgeAssistant.Infrastructure.Persistence.Initialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +26,12 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
+
+await using (var scope = app.Services.CreateAsyncScope())
+{
+    var databaseInitializer = scope.ServiceProvider.GetRequiredService<DatabaseInitializer>();
+    await databaseInitializer.InitializeAsync();
+}
 
 if (app.Environment.IsDevelopment())
 {

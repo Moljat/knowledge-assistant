@@ -16,6 +16,9 @@ dotnet test KnowledgeAssistant.sln
 dotnet test KnowledgeAssistant.sln --collect:"XPlat Code Coverage"
 ```
 
+Las pruebas que requieren SQL Server usan `KNOWLEDGE_ASSISTANT_TEST_CONNECTION`. Cuando la
+variable no existe se reportan como omitidas; en CI deberán ejecutarse contra un servicio SQL.
+
 ## Frontend
 
 - Componentes: renderizado, validaciones, estados y eventos.
