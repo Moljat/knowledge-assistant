@@ -17,9 +17,21 @@ por ejemplo `Mistral__ApiKey`.
 ```powershell
 dotnet restore KnowledgeAssistant.sln
 dotnet run --project backend/src/KnowledgeAssistant.Api
-npm install
-npm --workspace frontend start
+cd frontend
+npm ci --workspaces=false
+npm start
 ```
+
+La API expone OpenAPI en desarrollo mediante `/openapi/v1.json`.
+
+Para ejecutar el stack completo con migraciones y datos semilla:
+
+```powershell
+docker compose up --build
+```
+
+El frontend queda disponible en `http://localhost:4200` y la API en
+`http://localhost:8080`.
 
 ## Migraciones
 

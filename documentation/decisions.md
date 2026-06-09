@@ -17,15 +17,15 @@ capacidad de prueba. No se introducirán microservicios sin una necesidad demost
 
 ## ADR-004: Mistral mediante HTTP
 
-El adaptador usará la API HTTP oficial detrás de `IAiAnalysisService`. Esto evita acoplar
+El adaptador usa la API HTTP oficial detrás de `IAiAnalysisService`. Esto evita acoplar
 Application a un SDK y permite probar el protocolo con un manejador HTTP controlado.
 
 ## ADR-005: SQL Server en Docker y LocalDB
 
 Docker ofrece reproducibilidad. La configuración local mantiene compatibilidad con LocalDB en
-Windows. EF Core será la única fuente de cambios del esquema.
+Windows. EF Core es la única fuente de cambios del esquema.
 
 ## ADR-006: BackgroundService
 
-La automatización será interna para reducir componentes operativos durante la prueba. Procesará
+La automatización es interna para reducir componentes operativos durante la prueba. Procesa
 registros pendientes con idempotencia y reintentos limitados.

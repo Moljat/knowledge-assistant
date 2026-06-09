@@ -70,9 +70,4 @@ Las tareas están ordenadas para producir incrementos pequeños y demostrables.
 - [x] `T6.3` Validar seguridad, sanitización y configuración.
 - [x] `T6.4` Crear workflow de CI para build y pruebas.
 - [x] `T6.5` Capturar evidencias funcionales y de pruebas.
-- [ ] `T6.6` Completar documentación obligatoria y entrega final.
-
-## Primera tarea propuesta
-
-`T1.1`: definir definitivamente el agregado `KnowledgeRecord`, sus campos, estados y reglas.
-Es el contrato que condiciona base de datos, CRUD, prompts y pantallas.
+- [x] `T6.6` Completar documentación obligatoria y entrega final.

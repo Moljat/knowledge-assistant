@@ -1,6 +1,6 @@
 # Documento operativo
 
-## Flujo de negocio previsto
+## Flujo de negocio
 
 1. Consultar el dashboard.
 2. Crear un registro empresarial con título, contenido y fuente.
@@ -10,14 +10,13 @@
 6. Formular preguntas sobre un registro.
 7. Consultar el estado de análisis automatizados.
 
-## Pantallas previstas
+## Pantallas implementadas
 
 - Dashboard.
 - Listado de registros.
 - Alta y edición.
-- Detalle.
-- Panel de análisis de IA.
-- Preguntas y respuestas.
+- Edición con panel de análisis de IA.
+- Chat global contextual.
 
 Las capturas funcionales del dashboard, listado, alta, edición y panel de IA están disponibles
 en [`evidence/README.md`](evidence/README.md).

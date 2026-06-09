@@ -2,8 +2,8 @@
 
 ## Herramientas
 
-- Codex se utiliza para análisis del enunciado, scaffolding, implementación y revisión.
-- La aplicación final utilizará Mistral como proveedor funcional.
+- Codex se utilizó para análisis del enunciado, implementación, pruebas, revisión y documentación.
+- La aplicación utiliza Mistral como proveedor funcional.
 
 ## Alcance de la asistencia
 
@@ -18,4 +18,5 @@ valida mediante compilación, pruebas automatizadas y revisión del comportamien
 - Prueba funcional de endpoints y pantallas.
 - Revisión para evitar secretos y respuestas simuladas.
 
-Este documento se actualizará durante el proyecto con las tareas concretas asistidas por IA.
+Las decisiones y cambios asistidos quedaron sujetos al mismo flujo de ramas, pruebas, revisión
+y autorización que el resto del proyecto.
