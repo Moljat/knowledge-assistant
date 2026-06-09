@@ -73,3 +73,4 @@
 | TC-069 | Seguridad | Pregunta IA invalida | Rechaza texto vacio o mayor a 1000 caracteres con ProblemDetails |
 | TC-070 | Configuracion | Mistral inseguro | Rechaza URL no HTTPS, modelo vacio y timeout fuera de rango |
 | TC-071 | Secretos | Credencial Mistral ausente | No envia la solicitud ni registra contenido sensible |
+| TC-072 | CI | Pipeline completo | Compila backend/frontend y ejecuta pruebas con SQL Server |

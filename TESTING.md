@@ -77,6 +77,14 @@ aplicación y dominio con dependencias externas controladas:
 El adaptador de IA se sustituye solamente dentro del host de pruebas. Producción sigue usando
 la integración real configurada en `Infrastructure`.
 
+## Integración continua
+
+El workflow `.github/workflows/ci.yml` se ejecuta en pushes y pull requests hacia `dev`.
+
+- Backend: restaura, compila en Release y ejecuta todas las pruebas con SQL Server y cobertura.
+- Frontend: instala con `npm ci --workspaces=false`, compila y ejecuta pruebas headless con cobertura.
+- Los resultados backend y la cobertura frontend se publican como artefactos durante 14 días.
+
 ## Frontend
 
 `ng build` y `ng test` requieren un navegador Chromium disponible. El script

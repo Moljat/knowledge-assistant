@@ -11,6 +11,7 @@ secrets.json
 **/bin/
 **/obj/
 TestResults/
+artifacts/
 *.user
 *.suo
 
