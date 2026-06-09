@@ -116,11 +116,15 @@ public sealed class KnowledgeRecordRepository(KnowledgeAssistantDbContext contex
             .Select(g => new { Key = g.Key, Count = g.Count() })
             .ToDictionaryAsync(g => g.Key, g => g.Count, cancellationToken);
 
+        var totalRetries = await context.KnowledgeRecords
+            .SumAsync(r => (int?)r.AiRetryCount, cancellationToken) ?? 0;
+
         return DashboardStats.Create(
             totalRecords,
             statusCounts,
             typeCounts,
-            aiStatusCounts);
+            aiStatusCounts,
+            totalRetries);
     }
 
     public void Add(KnowledgeRecord record)

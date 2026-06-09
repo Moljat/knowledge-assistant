@@ -54,6 +54,7 @@ export interface DashboardStats {
   byStatus: Record<string, number>;
   byType: Record<string, number>;
   byAiStatus: Record<string, number>;
+  totalRetries: number;
 }
 
 @Injectable({ providedIn: 'root' })
