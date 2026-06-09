@@ -1,3 +1,4 @@
+using KnowledgeAssistant.Application.Ai;
 using KnowledgeAssistant.Application.Records;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -14,6 +15,7 @@ public static class DependencyInjection
         services.AddScoped<IDeleteKnowledgeRecordHandler, DeleteKnowledgeRecordHandler>();
         services.AddScoped<IGetDashboardStatsHandler, GetDashboardStatsHandler>();
         services.AddScoped<IAnalyzeRecordHandler, AnalyzeRecordHandler>();
+        services.AddScoped<IChatHandler, ChatHandler>();
 
         return services;
     }

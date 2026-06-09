@@ -10,6 +10,7 @@ public static class AiPrompts
         AiAnalysisType.Classification => ClassificationPrompt,
         AiAnalysisType.Recommendations => RecommendationsPrompt,
         AiAnalysisType.Question => QuestionPrompt,
+        AiAnalysisType.Chat => ChatPrompt,
         _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
     };
 
@@ -22,6 +23,8 @@ public static class AiPrompts
         AiAnalysisType.Recommendations =>
             """{"recommendations": ["rec1", "rec2"]}""",
         AiAnalysisType.Question =>
+            """{"answer": "text"}""",
+        AiAnalysisType.Chat =>
             """{"answer": "text"}""",
         _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
     };
@@ -89,6 +92,24 @@ public static class AiPrompts
 
         Reglas:
         - Si el contexto no contiene la información necesaria, indícalo claramente.
+        - No inventes información ni uses conocimiento externo.
+        - Responde en español.
+        - Máximo 2000 caracteres.
+        - Sé directo y factual.
+
+        Responde ÚNICAMENTE con un objeto JSON en este formato exacto:
+        {"answer": "tu respuesta aquí"}
+        """;
+
+    private const string ChatPrompt =
+        """
+        Eres un asistente de conocimiento empresarial. Tienes acceso al contexto del sistema
+        con registros de conocimiento (título, categoría, contenido). Responde preguntas
+        basándote en ese contexto.
+
+        Reglas:
+        - Responde directamente la pregunta del usuario usando el contexto proporcionado.
+        - Si el contexto no contiene información suficiente, indícalo y sugiere crear un registro.
         - No inventes información ni uses conocimiento externo.
         - Responde en español.
         - Máximo 2000 caracteres.

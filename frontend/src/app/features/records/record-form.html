@@ -62,3 +62,7 @@
     </button>
   </div>
 </form>
+
+@if (isEdit && currentRecord) {
+  <app-ai-panel [record]="currentRecord" (updated)="onAiUpdated($event)" />
+}

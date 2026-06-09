@@ -16,13 +16,19 @@ describe('RecordForm', () => {
     type: 3,
     status: 1,
     aiStatus: 0,
+    summary: null,
+    category: null,
+    recommendations: null,
+    aiError: null,
+    aiProcessedAtUtc: null,
     createdAtUtc: '2026-01-01T00:00:00Z',
     updatedAtUtc: '2026-01-01T00:00:00Z'
   };
 
   beforeEach(async () => {
     records = jasmine.createSpyObj<KnowledgeRecordService>('KnowledgeRecordService', [
-      'create', 'getById', 'update'
+      'create', 'getById', 'update', 'requestAiSummary', 'requestAiClassification',
+      'requestAiRecommendations', 'askQuestion'
     ]);
     records.create.and.returnValue(of({ ...existing }));
     records.update.and.returnValue(of({ ...existing }));

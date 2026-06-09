@@ -2,6 +2,7 @@ import { AsyncPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { RouterLink } from '@angular/router';
 import { catchError, map, of, startWith, switchMap, timer } from 'rxjs';
@@ -9,7 +10,7 @@ import { KnowledgeRecordService } from '../records/knowledge-record.service';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [AsyncPipe, MatButtonModule, MatCardModule, MatProgressSpinnerModule, RouterLink],
+  imports: [AsyncPipe, MatButtonModule, MatCardModule, MatIconModule, MatProgressSpinnerModule, RouterLink],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss'
 })
