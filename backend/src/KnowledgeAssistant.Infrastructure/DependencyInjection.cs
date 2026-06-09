@@ -6,6 +6,7 @@ using KnowledgeAssistant.Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace KnowledgeAssistant.Infrastructure;
 
@@ -41,6 +42,15 @@ public static class DependencyInjection
         services
             .AddOptions<MistralOptions>()
             .Bind(configuration.GetSection(MistralOptions.SectionName));
+
+        services.AddHttpClient<IAiAnalysisService, MistralAiAnalysisService>((sp, client) =>
+        {
+            var options = sp.GetRequiredService<IOptions<MistralOptions>>().Value;
+            client.BaseAddress = new Uri(options.BaseUrl.TrimEnd('/') + "/");
+            client.Timeout = TimeSpan.FromSeconds(options.TimeoutSeconds);
+            client.DefaultRequestHeaders.Authorization =
+                new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", options.ApiKey);
+        });
 
         return services;
     }
