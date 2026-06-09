@@ -11,6 +11,7 @@ public static class DependencyInjection
         services.AddScoped<IGetKnowledgeRecordByIdHandler, GetKnowledgeRecordByIdHandler>();
         services.AddScoped<IListKnowledgeRecordsHandler, ListKnowledgeRecordsHandler>();
         services.AddScoped<IUpdateKnowledgeRecordHandler, UpdateKnowledgeRecordHandler>();
+        services.AddScoped<IDeleteKnowledgeRecordHandler, DeleteKnowledgeRecordHandler>();
 
         return services;
     }

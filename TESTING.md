@@ -37,3 +37,13 @@ npm --workspace frontend run test:ci
 - Todo defecto corregido debe incluir una prueba de regresión.
 - Las pruebas no dependen de una llave real de Mistral salvo la suite marcada como externa.
 - Las evidencias de entrega se guardarán en `documentation/evidence/`.
+
+## Pendiente frontend Fase 3
+
+En este entorno `ng build` y `ng test` fallan por resolucion de archivos/modulos (`Cannot read directory "../../.."`, `zone.js`, `src/styles.scss`) y el `npm` global apunta a un `npm-cli.js` inexistente. Mientras se corrige, validar TypeScript con:
+
+```powershell
+cd frontend
+.\node_modules\.bin\tsc.cmd -p tsconfig.app.json --noEmit
+.\node_modules\.bin\tsc.cmd -p tsconfig.spec.json --noEmit
+```
