@@ -68,7 +68,7 @@ Las tareas están ordenadas para producir incrementos pequeños y demostrables.
 - [x] `T6.1` Completar pruebas end-to-end de flujos críticos.
 - [x] `T6.2` Medir cobertura y cerrar huecos de riesgo.
 - [x] `T6.3` Validar seguridad, sanitización y configuración.
-- [ ] `T6.4` Crear workflow de CI para build y pruebas.
+- [x] `T6.4` Crear workflow de CI para build y pruebas.
 - [ ] `T6.5` Capturar evidencias funcionales y de pruebas.
 - [ ] `T6.6` Completar documentación obligatoria y entrega final.
 

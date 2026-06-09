@@ -65,3 +65,14 @@ Validación ejecutada el 9 de junio de 2026:
 - las respuestas inválidas del proveedor ya no se incluyen en logs;
 - `npm audit` no pudo ejecutarse porque la instalación workspace actual no dispone de un
   lockfile raíz compatible; no se generó uno para evitar cambios de dependencias fuera de tarea.
+
+## T6.4 - Integración continua
+
+El workflow de GitHub Actions valida cada push y pull request hacia `dev` con jobs paralelos:
+
+- backend en .NET 9.0.305 y SQL Server 2022, incluyendo las pruebas físicas de persistencia;
+- frontend en Node.js 22 con `npm ci --workspaces=false`, build y pruebas Chrome Headless;
+- publicación de resultados y cobertura como artefactos con retención de 14 días.
+
+La llave real de Mistral no se usa en CI. Las pruebas del adaptador continúan usando HTTP
+controlado y ninguna respuesta de IA se simula en la aplicación de producción.
