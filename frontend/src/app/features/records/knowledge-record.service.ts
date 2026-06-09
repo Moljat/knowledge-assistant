@@ -30,10 +30,18 @@ export interface KnowledgeRecordListFilters {
   aiStatus?: number;
 }
 
+export interface DashboardStats {
+  totalRecords: number;
+  byStatus: Record<string, number>;
+  byType: Record<string, number>;
+  byAiStatus: Record<string, number>;
+}
+
 @Injectable({ providedIn: 'root' })
 export class KnowledgeRecordService {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = '/api/v1/records';
+  private readonly dashboardUrl = '/api/v1/dashboard';
 
   list(
     page = 1,
@@ -47,6 +55,10 @@ export class KnowledgeRecordService {
 
   delete(id: string): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${id}`);
+  }
+
+  getStats(): Observable<DashboardStats> {
+    return this.http.get<DashboardStats>(`${this.dashboardUrl}/stats`);
   }
 
   private buildListParams(

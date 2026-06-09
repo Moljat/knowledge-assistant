@@ -95,6 +95,34 @@ public sealed class KnowledgeRecordRepository(KnowledgeAssistantDbContext contex
         return query;
     }
 
+    public async Task<DashboardStats> GetDashboardStatsAsync(
+        CancellationToken cancellationToken = default)
+    {
+        var totalRecords = await context.KnowledgeRecords
+            .CountAsync(cancellationToken);
+
+        var statusCounts = await context.KnowledgeRecords
+            .GroupBy(r => r.Status)
+            .Select(g => new { Key = g.Key, Count = g.Count() })
+            .ToDictionaryAsync(g => g.Key, g => g.Count, cancellationToken);
+
+        var typeCounts = await context.KnowledgeRecords
+            .GroupBy(r => r.Type)
+            .Select(g => new { Key = g.Key, Count = g.Count() })
+            .ToDictionaryAsync(g => g.Key, g => g.Count, cancellationToken);
+
+        var aiStatusCounts = await context.KnowledgeRecords
+            .GroupBy(r => r.AiStatus)
+            .Select(g => new { Key = g.Key, Count = g.Count() })
+            .ToDictionaryAsync(g => g.Key, g => g.Count, cancellationToken);
+
+        return DashboardStats.Create(
+            totalRecords,
+            statusCounts,
+            typeCounts,
+            aiStatusCounts);
+    }
+
     public void Add(KnowledgeRecord record)
     {
         ArgumentNullException.ThrowIfNull(record);

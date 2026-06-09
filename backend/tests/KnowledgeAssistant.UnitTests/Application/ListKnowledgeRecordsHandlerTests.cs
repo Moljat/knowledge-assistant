@@ -158,5 +158,10 @@ public sealed class ListKnowledgeRecordsHandlerTests
         public void Remove(KnowledgeRecord record)
         {
         }
+
+        public Task<DashboardStats> GetDashboardStatsAsync(CancellationToken cancellationToken = default)
+        {
+            return Task.FromResult(DashboardStats.Empty);
+        }
     }
 }

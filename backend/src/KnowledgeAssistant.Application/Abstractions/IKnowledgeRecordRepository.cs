@@ -22,6 +22,9 @@ public interface IKnowledgeRecordRepository
         int pageSize,
         CancellationToken cancellationToken = default);
 
+    Task<DashboardStats> GetDashboardStatsAsync(
+        CancellationToken cancellationToken = default);
+
     void Add(KnowledgeRecord record);
 
     void Remove(KnowledgeRecord record);

@@ -406,6 +406,11 @@ public sealed class CreateRecordEndpointTests
 
             return query;
         }
+
+        public Task<DashboardStats> GetDashboardStatsAsync(CancellationToken cancellationToken = default)
+        {
+            return Task.FromResult(DashboardStats.Empty);
+        }
     }
 
     private sealed class SuccessfulUnitOfWork : IUnitOfWork
