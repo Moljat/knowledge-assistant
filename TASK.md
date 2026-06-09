@@ -47,7 +47,7 @@ Las tareas están ordenadas para producir incrementos pequeños y demostrables.
 - [x] `T4.5` Implementar recomendaciones.
 - [x] `T4.6` Implementar preguntas sobre un registro o conjunto filtrado.
 - [x] `T4.7` Manejar timeouts, rate limits, respuestas inválidas y reintentos acotados.
-- [ ] `T4.8` Probar el adaptador con HTTP simulado y una prueba real opcional.
+- [x] `T4.8` Probar el adaptador con HTTP simulado y una prueba real opcional.
 
 ## Fase 5: Automatización
 
