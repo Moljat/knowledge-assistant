@@ -8,7 +8,12 @@
 </section>
 
 @if (stats$ | async; as state) {
-  @if (state.error) {
+  @if (!state.stats && !state.error) {
+    <div class="loading-state">
+      <mat-spinner diameter="40" />
+      <p>Cargando indicadores…</p>
+    </div>
+  } @else if (state.error) {
     <mat-card appearance="outlined" class="error-card">
       <mat-card-content>{{ state.error }}</mat-card-content>
     </mat-card>

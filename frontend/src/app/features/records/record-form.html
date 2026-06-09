@@ -6,6 +6,10 @@
   <a mat-stroked-button routerLink="/records">Volver</a>
 </section>
 
+@if (errorMessage) {
+  <p class="error-message">{{ errorMessage }}</p>
+}
+
 <form [formGroup]="form" (ngSubmit)="onSubmit()" class="record-form">
   <mat-form-field appearance="outline">
     <mat-label>Título</mat-label>
@@ -49,8 +53,12 @@
 
   <div class="form-actions">
     <a mat-stroked-button routerLink="/records">Cancelar</a>
-    <button mat-flat-button type="submit" [disabled]="form.invalid">
-      {{ isEdit ? 'Guardar cambios' : 'Crear registro' }}
+    <button mat-flat-button type="submit" [disabled]="form.invalid || submitting">
+      @if (submitting) {
+        Guardando…
+      } @else {
+        {{ isEdit ? 'Guardar cambios' : 'Crear registro' }}
+      }
     </button>
   </div>
 </form>

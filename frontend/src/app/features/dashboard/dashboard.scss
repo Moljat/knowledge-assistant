@@ -33,6 +33,15 @@ h1 {
   line-height: 1.6;
 }
 
+.loading-state {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 24px;
+  padding: 48px 24px;
+}
+
 .error-card {
   margin-top: 24px;
   color: var(--mat-sys-error);
