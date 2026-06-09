@@ -61,6 +61,9 @@ public sealed class KnowledgeRecordConfiguration : IEntityTypeConfiguration<Know
         builder.Property(record => record.AiProcessedAtUtc)
             .HasPrecision(0);
 
+        builder.Property(record => record.AiRetryCount)
+            .HasDefaultValue(0);
+
         builder.HasIndex(record => record.CreatedAtUtc);
         builder.HasIndex(record => record.Category);
         builder.HasIndex(record => record.Status);

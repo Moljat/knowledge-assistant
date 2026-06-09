@@ -9,6 +9,7 @@ public sealed class KnowledgeRecord
     public const int MaxSummaryLength = 4_000;
     public const int MaxRecommendationsLength = 8_000;
     public const int MaxAiErrorLength = 1_000;
+    public const int MaxAiRetryCount = 3;
 
     private KnowledgeRecord()
     {
@@ -61,6 +62,8 @@ public sealed class KnowledgeRecord
     public DateTimeOffset? ArchivedAtUtc { get; private set; }
 
     public DateTimeOffset? AiProcessedAtUtc { get; private set; }
+
+    public int AiRetryCount { get; private set; }
 
     public static KnowledgeRecord Create(
         string title,
@@ -167,6 +170,7 @@ public sealed class KnowledgeRecord
         }
 
         ClearAiResults();
+        AiRetryCount = 0;
         AiStatus = AiProcessingStatus.Pending;
         UpdatedAtUtc = now ?? DateTimeOffset.UtcNow;
     }
@@ -242,7 +246,10 @@ public sealed class KnowledgeRecord
 
         var timestamp = now ?? DateTimeOffset.UtcNow;
         AiError = NormalizeRequired(error, nameof(error), MaxAiErrorLength);
-        AiStatus = AiProcessingStatus.Failed;
+        AiRetryCount++;
+        AiStatus = AiRetryCount >= MaxAiRetryCount
+            ? AiProcessingStatus.Failed
+            : AiProcessingStatus.Pending;
         AiProcessedAtUtc = timestamp;
         UpdatedAtUtc = timestamp;
     }

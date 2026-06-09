@@ -59,7 +59,7 @@ Las tareas están ordenadas para producir incrementos pequeños y demostrables.
 ## Fase 5: Automatización
 
 - [x] `T5.1` Crear un `BackgroundService` para procesar registros pendientes.
-- [ ] `T5.2` Añadir estados, reintentos e idempotencia.
+- [x] `T5.2` Añadir estados, reintentos e idempotencia.
 - [ ] `T5.3` Exponer métricas operativas básicas del procesamiento.
 - [ ] `T5.4` Probar ejecución, cancelación y recuperación de errores.
 
