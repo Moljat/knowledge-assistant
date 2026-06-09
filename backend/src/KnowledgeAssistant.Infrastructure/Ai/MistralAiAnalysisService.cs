@@ -119,6 +119,12 @@ public sealed class MistralAiAnalysisService : IAiAnalysisService
                 Recommendations: [],
                 Answer: root.TryGetProperty("answer", out var a) ? a.GetString() : null),
 
+            AiAnalysisType.Chat => new AiAnalysisResult(
+                Summary: null,
+                Category: null,
+                Recommendations: [],
+                Answer: root.TryGetProperty("answer", out var a) ? a.GetString() : null),
+
             _ => EmptyResult()
         };
     }

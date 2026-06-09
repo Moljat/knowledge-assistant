@@ -48,6 +48,13 @@ Las tareas están ordenadas para producir incrementos pequeños y demostrables.
 - [x] `T4.6` Implementar preguntas sobre un registro o conjunto filtrado.
 - [x] `T4.7` Manejar timeouts, rate limits, respuestas inválidas y reintentos acotados.
 - [x] `T4.8` Probar el adaptador con HTTP simulado y una prueba real opcional.
+- [x] `T4.9` Exponer campos de IA (summary, category, recommendations) en API y frontend.
+- [x] `T4.10` Agregar panel de análisis IA en formulario de edición de registros.
+- [x] `T4.11` Crear chat global con Mistral accesible desde cualquier página.
+- [x] `T4.12` Inyectar registros de la base de datos como contexto en el chat global.
+
+### ✅ Fase 4 completada
+
 
 ## Fase 5: Automatización
 

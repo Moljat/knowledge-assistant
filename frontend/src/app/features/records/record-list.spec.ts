@@ -16,6 +16,11 @@ describe('RecordList', () => {
     type: 2,
     status: 1,
     aiStatus: 0,
+    summary: null,
+    category: null,
+    recommendations: null,
+    aiError: null,
+    aiProcessedAtUtc: null,
     createdAtUtc: '2026-06-09T18:00:00Z',
     updatedAtUtc: '2026-06-09T18:00:00Z'
   };

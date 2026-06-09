@@ -366,6 +366,11 @@ public sealed record KnowledgeRecordResponse(
     KnowledgeRecordType Type,
     KnowledgeRecordStatus Status,
     AiProcessingStatus AiStatus,
+    string? Summary,
+    string? Category,
+    string? Recommendations,
+    string? AiError,
+    DateTimeOffset? AiProcessedAtUtc,
     DateTimeOffset CreatedAtUtc,
     DateTimeOffset UpdatedAtUtc)
 {
@@ -379,6 +384,11 @@ public sealed record KnowledgeRecordResponse(
             result.Type,
             result.Status,
             result.AiStatus,
+            result.Summary,
+            result.Category,
+            result.Recommendations,
+            result.AiError,
+            result.AiProcessedAtUtc,
             result.CreatedAtUtc,
             result.UpdatedAtUtc);
     }

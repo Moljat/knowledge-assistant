@@ -6,7 +6,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { catchError, finalize, of } from 'rxjs';
-import { KnowledgeRecordService } from './knowledge-record.service';
+import { AiPanel } from './ai-panel';
+import { KnowledgeRecord, KnowledgeRecordService } from './knowledge-record.service';
 
 @Component({
   selector: 'app-record-form',
@@ -18,6 +19,7 @@ import { KnowledgeRecordService } from './knowledge-record.service';
     MatSelectModule,
     ReactiveFormsModule,
     RouterLink,
+    AiPanel,
   ],
   templateUrl: './record-form.html',
   styleUrl: './record-form.scss',
@@ -47,11 +49,14 @@ export class RecordForm {
     type: [2 as number, Validators.required],
   });
 
+  protected currentRecord: KnowledgeRecord | null = null;
+
   constructor() {
     if (this.isEdit && this.recordId) {
       this.errorMessage = null;
       this.records.getById(this.recordId).subscribe({
         next: (record) => {
+          this.currentRecord = record;
           this.form.patchValue({
             title: record.title,
             content: record.content,
@@ -64,6 +69,10 @@ export class RecordForm {
         },
       });
     }
+  }
+
+  protected onAiUpdated(record: KnowledgeRecord): void {
+    this.currentRecord = record;
   }
 
   protected onSubmit(): void {

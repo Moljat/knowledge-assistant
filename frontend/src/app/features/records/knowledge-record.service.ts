@@ -10,6 +10,11 @@ export interface KnowledgeRecord {
   type: number;
   status: number;
   aiStatus: number;
+  summary: string | null;
+  category: string | null;
+  recommendations: string | null;
+  aiError: string | null;
+  aiProcessedAtUtc: string | null;
   createdAtUtc: string;
   updatedAtUtc: string;
 }
@@ -81,6 +86,26 @@ export class KnowledgeRecordService {
 
   update(id: string, request: UpdateKnowledgeRecordRequest): Observable<KnowledgeRecord> {
     return this.http.put<KnowledgeRecord>(`${this.baseUrl}/${id}`, request);
+  }
+
+  requestAiSummary(id: string): Observable<KnowledgeRecord> {
+    return this.http.post<KnowledgeRecord>(`${this.baseUrl}/${id}/ai/summary`, {});
+  }
+
+  requestAiClassification(id: string): Observable<KnowledgeRecord> {
+    return this.http.post<KnowledgeRecord>(`${this.baseUrl}/${id}/ai/classification`, {});
+  }
+
+  requestAiRecommendations(id: string): Observable<KnowledgeRecord> {
+    return this.http.post<KnowledgeRecord>(`${this.baseUrl}/${id}/ai/recommendations`, {});
+  }
+
+  askQuestion(id: string, question: string): Observable<KnowledgeRecord> {
+    return this.http.post<KnowledgeRecord>(`${this.baseUrl}/${id}/ai/questions`, { question });
+  }
+
+  chat(question: string): Observable<{ answer: string | null }> {
+    return this.http.post<{ answer: string | null }>(`/api/v1/ai/chat`, { question });
   }
 
   getStats(): Observable<DashboardStats> {

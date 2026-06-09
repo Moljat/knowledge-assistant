@@ -48,6 +48,11 @@ describe('KnowledgeRecordService', () => {
       type: 1,
       status: 1,
       aiStatus: 0,
+      summary: null,
+      category: null,
+      recommendations: null,
+      aiError: null,
+      aiProcessedAtUtc: null,
       createdAtUtc: '2026-01-01T00:00:00Z',
       updatedAtUtc: '2026-01-01T00:00:00Z'
     });
@@ -70,6 +75,11 @@ describe('KnowledgeRecordService', () => {
       type: 1,
       status: 1,
       aiStatus: 0,
+      summary: null,
+      category: null,
+      recommendations: null,
+      aiError: null,
+      aiProcessedAtUtc: null,
       createdAtUtc: '2026-01-01T00:00:00Z',
       updatedAtUtc: '2026-01-01T00:00:00Z'
     });
@@ -92,6 +102,11 @@ describe('KnowledgeRecordService', () => {
       type: 2,
       status: 1,
       aiStatus: 0,
+      summary: null,
+      category: null,
+      recommendations: null,
+      aiError: null,
+      aiProcessedAtUtc: null,
       createdAtUtc: '2026-01-01T00:00:00Z',
       updatedAtUtc: '2026-01-01T00:00:00Z'
     });

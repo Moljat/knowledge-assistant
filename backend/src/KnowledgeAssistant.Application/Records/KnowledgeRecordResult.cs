@@ -10,6 +10,11 @@ public sealed record KnowledgeRecordResult(
     KnowledgeRecordType Type,
     KnowledgeRecordStatus Status,
     AiProcessingStatus AiStatus,
+    string? Summary,
+    string? Category,
+    string? Recommendations,
+    string? AiError,
+    DateTimeOffset? AiProcessedAtUtc,
     DateTimeOffset CreatedAtUtc,
     DateTimeOffset UpdatedAtUtc)
 {
@@ -25,6 +30,11 @@ public sealed record KnowledgeRecordResult(
             record.Type,
             record.Status,
             record.AiStatus,
+            record.Summary,
+            record.Category,
+            record.Recommendations,
+            record.AiError,
+            record.AiProcessedAtUtc,
             record.CreatedAtUtc,
             record.UpdatedAtUtc);
     }
