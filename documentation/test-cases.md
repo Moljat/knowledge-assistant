@@ -32,3 +32,7 @@
 | TC-028 | Persistencia | Limites de columnas EF Core | Coinciden con los limites del dominio |
 | TC-029 | Persistencia | Fechas UTC | Se configuran con precision de segundos |
 | TC-030 | Persistencia | Recargar registro analizado | Conserva estado, fechas y resultados de IA |
+| TC-031 | Aplicacion | Crear registro valido | Persiste el agregado y devuelve estado inicial |
+| TC-032 | Aplicacion | Crear registro invalido | No persiste cambios |
+| TC-033 | API | Crear registro valido | Responde 201 Created con ubicacion y cuerpo |
+| TC-034 | API | Crear registro invalido | Responde 400 con ValidationProblemDetails |

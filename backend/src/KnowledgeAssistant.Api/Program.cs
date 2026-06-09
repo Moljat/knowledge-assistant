@@ -1,3 +1,4 @@
+using KnowledgeAssistant.Application;
 using KnowledgeAssistant.Infrastructure;
 using KnowledgeAssistant.Infrastructure.Persistence.Initialization;
 
@@ -9,6 +10,7 @@ builder.Logging.AddJsonConsole();
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddProblemDetails();
+builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 
 var allowedOrigins = builder.Configuration
