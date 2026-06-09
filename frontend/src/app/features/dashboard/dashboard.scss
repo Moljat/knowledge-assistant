@@ -33,6 +33,39 @@ h1 {
   line-height: 1.6;
 }
 
+.error-card {
+  margin-top: 24px;
+  color: var(--mat-sys-error);
+  text-align: center;
+  padding: 16px;
+}
+
+.indicators {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.indicator {
+  text-align: center;
+}
+
+.indicator-value {
+  display: block;
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+
+.indicator-label {
+  display: block;
+  margin-top: 4px;
+  color: var(--mat-sys-on-surface-variant);
+  font-size: 13px;
+}
+
 .capability-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -48,6 +81,10 @@ mat-card-content p {
 @media (max-width: 700px) {
   .hero {
     padding: 28px 24px;
+  }
+
+  .indicators {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .capability-grid {

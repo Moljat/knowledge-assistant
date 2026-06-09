@@ -7,6 +7,44 @@
   <a mat-flat-button routerLink="/records">Explorar registros</a>
 </section>
 
+@if (stats$ | async; as state) {
+  @if (state.error) {
+    <mat-card appearance="outlined" class="error-card">
+      <mat-card-content>{{ state.error }}</mat-card-content>
+    </mat-card>
+  } @else if (state.stats) {
+    <section class="indicators" aria-label="Indicadores del sistema">
+      <mat-card appearance="outlined" class="indicator total">
+        <mat-card-content>
+          <span class="indicator-value">{{ state.stats.totalRecords }}</span>
+          <span class="indicator-label">Total registros</span>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card appearance="outlined" class="indicator">
+        <mat-card-content>
+          <span class="indicator-value">{{ state.stats.byStatus['Active'] || 0 }}</span>
+          <span class="indicator-label">Activos</span>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card appearance="outlined" class="indicator">
+        <mat-card-content>
+          <span class="indicator-value">{{ state.stats.byAiStatus['Completed'] || 0 }}</span>
+          <span class="indicator-label">Analizados por IA</span>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card appearance="outlined" class="indicator">
+        <mat-card-content>
+          <span class="indicator-value">{{ state.stats.byType['Document'] || 0 }}</span>
+          <span class="indicator-label">Documentos</span>
+        </mat-card-content>
+      </mat-card>
+    </section>
+  }
+}
+
 <section class="capability-grid" aria-label="Capacidades previstas">
   @for (capability of capabilities; track capability.title) {
     <mat-card appearance="outlined">

@@ -40,4 +40,21 @@ describe('KnowledgeRecordService', () => {
     expect(request.request.method).toBe('DELETE');
     request.flush(null);
   });
+
+  it('should request dashboard stats', () => {
+    service.getStats().subscribe((response) => {
+      expect(response.totalRecords).toBe(10);
+      expect(response.byStatus['Active']).toBe(6);
+      expect(response.byType['Document']).toBe(4);
+    });
+
+    const request = http.expectOne('/api/v1/dashboard/stats');
+    expect(request.request.method).toBe('GET');
+    request.flush({
+      totalRecords: 10,
+      byStatus: { Draft: 3, Active: 6, Archived: 1 },
+      byType: { Document: 4, Note: 4, BusinessRecord: 2 },
+      byAiStatus: { NotRequested: 7, Pending: 1, Processing: 0, Completed: 2, Failed: 0 }
+    });
+  });
 });

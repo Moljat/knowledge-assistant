@@ -89,6 +89,11 @@ public sealed class DeleteKnowledgeRecordHandlerTests
         {
             RemovedRecord = record;
         }
+
+        public Task<DashboardStats> GetDashboardStatsAsync(CancellationToken cancellationToken = default)
+        {
+            return Task.FromResult(DashboardStats.Empty);
+        }
     }
 
     private sealed class CountingUnitOfWork : IUnitOfWork

@@ -148,6 +148,11 @@ public sealed class UpdateKnowledgeRecordHandlerTests
         public void Remove(KnowledgeRecord record)
         {
         }
+
+        public Task<DashboardStats> GetDashboardStatsAsync(CancellationToken cancellationToken = default)
+        {
+            return Task.FromResult(DashboardStats.Empty);
+        }
     }
 
     private sealed class CountingUnitOfWork : IUnitOfWork
