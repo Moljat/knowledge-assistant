@@ -19,7 +19,7 @@ Las tareas están ordenadas para producir incrementos pequeños y demostrables.
 
 ## Fase 2: CRUD REST
 
-- [ ] `T2.1` Crear registro con validaciones.
+- [x] `T2.1` Crear registro con validaciones.
 - [ ] `T2.2` Consultar detalle y listado paginado.
 - [ ] `T2.3` Editar registro preservando integridad.
 - [ ] `T2.4` Eliminar con confirmación desde el frontend.
