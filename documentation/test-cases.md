@@ -74,3 +74,4 @@
 | TC-070 | Configuracion | Mistral inseguro | Rechaza URL no HTTPS, modelo vacio y timeout fuera de rango |
 | TC-071 | Secretos | Credencial Mistral ausente | No envia la solicitud ni registra contenido sensible |
 | TC-072 | CI | Pipeline completo | Compila backend/frontend y ejecuta pruebas con SQL Server |
+| TC-073 | Evidencias | Recorrido funcional y pruebas | Capturas y resultados quedan versionados sin secretos |

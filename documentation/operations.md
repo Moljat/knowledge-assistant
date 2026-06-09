@@ -19,7 +19,8 @@
 - Panel de análisis de IA.
 - Preguntas y respuestas.
 
-Las capturas y evidencias se agregarán cuando cada flujo sea funcional.
+Las capturas funcionales del dashboard, listado, alta, edición y panel de IA están disponibles
+en [`evidence/README.md`](evidence/README.md).
 
 ## Datos de demostración
 

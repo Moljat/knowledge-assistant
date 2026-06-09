@@ -76,3 +76,16 @@ El workflow de GitHub Actions valida cada push y pull request hacia `dev` con jo
 
 La llave real de Mistral no se usa en CI. Las pruebas del adaptador continúan usando HTTP
 controlado y ninguna respuesta de IA se simula en la aplicación de producción.
+
+## T6.5 - Evidencias funcionales y de pruebas
+
+El 9 de junio de 2026 se verificó el stack local completo con frontend, API y SQL Server:
+
+- health check de API con HTTP 200;
+- 91 pruebas unitarias y 48 de integración superadas, incluyendo persistencia SQL;
+- 38 pruebas frontend superadas;
+- validación TypeScript de aplicación y especificaciones sin errores;
+- capturas de dashboard, listado, alta, edición y panel de análisis IA.
+
+El índice y las imágenes están en [`evidence/README.md`](evidence/README.md). Las capturas usan
+datos semilla y no contienen secretos ni respuestas generadas por una IA simulada.

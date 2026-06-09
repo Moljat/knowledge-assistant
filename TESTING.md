@@ -43,6 +43,9 @@ npm --workspace frontend run test:ci
 - Las pruebas no dependen de una llave real de Mistral salvo la suite marcada como externa.
 - Las evidencias de entrega se guardarán en `documentation/evidence/`.
 
+El índice versionado de capturas funcionales, comandos y resultados se encuentra en
+[`documentation/evidence/README.md`](documentation/evidence/README.md).
+
 ## Cobertura actual
 
 Medición del 9 de junio de 2026:
