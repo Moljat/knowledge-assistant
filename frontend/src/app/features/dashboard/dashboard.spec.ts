@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, discardPeriodicTasks, fakeAsync, tick } from '@angular/core/testing';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
-import { of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { DashboardStats, KnowledgeRecordService } from '../records/knowledge-record.service';
 import { Dashboard } from './dashboard';
 
@@ -71,6 +71,31 @@ describe('Dashboard', () => {
     fixture.detectChanges();
 
     expect(records.getStats).toHaveBeenCalled();
+    discardPeriodicTasks();
+  }));
+
+  it('should show loading spinner before stats arrive', fakeAsync(() => {
+    records.getStats.and.returnValue(new Observable(() => {}));
+    fixture = TestBed.createComponent(Dashboard);
+    fixture.detectChanges();
+
+    const spinner = fixture.nativeElement.querySelector('mat-spinner');
+    expect(spinner).toBeTruthy();
+    discardPeriodicTasks();
+  }));
+
+  it('should show error card when stats fail', fakeAsync(() => {
+    records.getStats.and.returnValue(
+      new Observable((sub) => { setTimeout(() => sub.error(new Error('fail'))); })
+    );
+
+    fixture = TestBed.createComponent(Dashboard);
+    fixture.detectChanges();
+    tick();
+    fixture.detectChanges();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+    expect(compiled.textContent).toContain('No se pudieron cargar los indicadores');
     discardPeriodicTasks();
   }));
 });
