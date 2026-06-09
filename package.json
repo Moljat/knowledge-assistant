@@ -1,0 +1,21 @@
+{
+  "name": "knowledge-assistant",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "frontend"
+  ],
+  "scripts": {
+    "start:frontend": "npm --workspace frontend run start",
+    "build:frontend": "npm --workspace frontend run build",
+    "test:frontend": "npm --workspace frontend run test:ci",
+    "start:backend": "dotnet run --project backend/src/KnowledgeAssistant.Api",
+    "build:backend": "dotnet build KnowledgeAssistant.sln",
+    "test:backend": "dotnet test KnowledgeAssistant.sln",
+    "build": "npm run build:backend && npm run build:frontend",
+    "test": "npm run test:backend && npm run test:frontend"
+  },
+  "engines": {
+    "node": ">=20.19 <25"
+  }
+}

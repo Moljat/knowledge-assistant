@@ -1,0 +1,39 @@
+.page-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  color: var(--mat-sys-primary);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(36px, 5vw, 52px);
+  letter-spacing: -0.03em;
+}
+
+.page-heading p:last-child,
+.empty-state {
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.empty-state {
+  padding: 48px 24px;
+  text-align: center;
+}
+
+@media (max-width: 600px) {
+  .page-heading {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}

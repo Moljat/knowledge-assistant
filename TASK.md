@@ -1,0 +1,68 @@
+# Plan de implementación
+
+Las tareas están ordenadas para producir incrementos pequeños y demostrables.
+
+## Fase 0: Base del repositorio
+
+- [x] `T0.1` Crear monorepo, solución .NET y aplicación Angular.
+- [x] `T0.2` Separar capas Domain, Application, Infrastructure y Api.
+- [x] `T0.3` Preparar Docker Compose, variables de entorno y documentación inicial.
+- [x] `T0.4` Incorporar proyectos de pruebas unitarias e integración.
+
+## Fase 1: Modelo y persistencia
+
+- [ ] `T1.1` Cerrar el modelo de `KnowledgeRecord` y sus invariantes.
+- [ ] `T1.2` Crear configuración EF Core y primera migración.
+- [ ] `T1.3` Implementar repositorio y unidad de trabajo.
+- [ ] `T1.4` Agregar datos semilla para demostración.
+- [ ] `T1.5` Probar reglas de dominio y persistencia.
+
+## Fase 2: CRUD REST
+
+- [ ] `T2.1` Crear registro con validaciones.
+- [ ] `T2.2` Consultar detalle y listado paginado.
+- [ ] `T2.3` Editar registro preservando integridad.
+- [ ] `T2.4` Eliminar con confirmación desde el frontend.
+- [ ] `T2.5` Buscar y aplicar filtros dinámicos.
+- [ ] `T2.6` Estandarizar errores, logging y códigos HTTP.
+
+## Fase 3: Frontend de gestión
+
+- [ ] `T3.1` Crear layout responsive y navegación.
+- [ ] `T3.2` Implementar dashboard con indicadores.
+- [ ] `T3.3` Implementar tabla paginada, búsqueda y filtros.
+- [ ] `T3.4` Implementar formulario reactivo de alta y edición.
+- [ ] `T3.5` Agregar estados de carga, vacíos y errores.
+- [ ] `T3.6` Probar componentes, servicios e interacciones.
+
+## Fase 4: Mistral e IA
+
+- [ ] `T4.1` Configurar cliente Mistral y manejo seguro de credenciales.
+- [ ] `T4.2` Diseñar prompts reutilizables y respuestas JSON estructuradas.
+- [ ] `T4.3` Implementar resumen inteligente.
+- [ ] `T4.4` Implementar clasificación automática.
+- [ ] `T4.5` Implementar recomendaciones.
+- [ ] `T4.6` Implementar preguntas sobre un registro o conjunto filtrado.
+- [ ] `T4.7` Manejar timeouts, rate limits, respuestas inválidas y reintentos acotados.
+- [ ] `T4.8` Probar el adaptador con HTTP simulado y una prueba real opcional.
+
+## Fase 5: Automatización
+
+- [ ] `T5.1` Crear un `BackgroundService` para procesar registros pendientes.
+- [ ] `T5.2` Añadir estados, reintentos e idempotencia.
+- [ ] `T5.3` Exponer métricas operativas básicas del procesamiento.
+- [ ] `T5.4` Probar ejecución, cancelación y recuperación de errores.
+
+## Fase 6: Calidad y entrega
+
+- [ ] `T6.1` Completar pruebas end-to-end de flujos críticos.
+- [ ] `T6.2` Medir cobertura y cerrar huecos de riesgo.
+- [ ] `T6.3` Validar seguridad, sanitización y configuración.
+- [ ] `T6.4` Crear workflow de CI para build y pruebas.
+- [ ] `T6.5` Capturar evidencias funcionales y de pruebas.
+- [ ] `T6.6` Completar documentación obligatoria y entrega final.
+
+## Primera tarea propuesta
+
+`T1.1`: definir definitivamente el agregado `KnowledgeRecord`, sus campos, estados y reglas.
+Es el contrato que condiciona base de datos, CRUD, prompts y pantallas.

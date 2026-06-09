@@ -1,0 +1,33 @@
+# Environment and secrets
+.env
+.env.*
+!.env.example
+appsettings.Local.json
+secrets.json
+
+# .NET
+.dotnet/
+.nuget/
+**/bin/
+**/obj/
+TestResults/
+*.user
+*.suo
+
+# Node / Angular
+.npm-cache/
+node_modules/
+dist/
+coverage/
+.angular/
+
+# IDE and OS
+.idea/
+.vs/
+.vscode/
+!.vscode/extensions.json
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

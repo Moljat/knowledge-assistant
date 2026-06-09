@@ -1,0 +1,41 @@
+.app-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  border-bottom: 1px solid var(--app-border);
+}
+
+.brand {
+  color: inherit;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.toolbar-spacer {
+  flex: 1 1 auto;
+}
+
+.active {
+  background: color-mix(in srgb, var(--mat-sys-primary) 12%, transparent);
+}
+
+.app-content {
+  width: min(1120px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 40px 0 64px;
+}
+
+@media (max-width: 600px) {
+  .app-toolbar {
+    padding-inline: 12px;
+  }
+
+  .brand {
+    font-size: 16px;
+  }
+
+  .app-content {
+    width: min(100% - 24px, 1120px);
+    padding-top: 24px;
+  }
+}

@@ -1,0 +1,21 @@
+<section class="hero">
+  <p class="eyebrow">Plataforma interna de conocimiento</p>
+  <h1>Convierte información empresarial en decisiones útiles.</h1>
+  <p class="hero-copy">
+    Registra, organiza y analiza contenido con una integración real de Mistral.
+  </p>
+  <a mat-flat-button routerLink="/records">Explorar registros</a>
+</section>
+
+<section class="capability-grid" aria-label="Capacidades previstas">
+  @for (capability of capabilities; track capability.title) {
+    <mat-card appearance="outlined">
+      <mat-card-header>
+        <mat-card-title>{{ capability.title }}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>{{ capability.description }}</p>
+      </mat-card-content>
+    </mat-card>
+  }
+</section>
