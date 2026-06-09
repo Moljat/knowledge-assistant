@@ -181,16 +181,89 @@ public class MistralAiAnalysisServiceTests : IDisposable
         Assert.Null(result.Answer);
     }
 
+    [Fact]
+    public async Task AnalyzeAsync_WithoutApiKey_RejectsRequestBeforeHttpCall()
+    {
+        var handler = new MockHttpMessageHandler();
+        var http = new HttpClient(handler)
+        {
+            BaseAddress = new Uri("https://api.mistral.ai/v1/")
+        };
+        var service = new MistralAiAnalysisService(
+            http,
+            Options.Create(new MistralOptions { ApiKey = "" }),
+            NullLogger<MistralAiAnalysisService>.Instance);
+
+        await Assert.ThrowsAsync<HttpRequestException>(() =>
+            service.AnalyzeAsync(
+                new AiAnalysisRequest("Content", AiAnalysisType.Summary)));
+
+        Assert.Equal(0, handler.RequestCount);
+    }
+
+    [Fact]
+    public async Task AnalyzeAsync_WithInvalidModelContent_DoesNotLogResponseContent()
+    {
+        const string sensitiveContent = "customer-secret-invalid-json";
+        _handler.Response = new HttpResponseMessage(HttpStatusCode.OK)
+        {
+            Content = JsonContent.Create(new
+            {
+                choices = new[]
+                {
+                    new { message = new { content = sensitiveContent } }
+                }
+            })
+        };
+        var logger = new CapturingLogger<MistralAiAnalysisService>();
+        var service = new MistralAiAnalysisService(
+            new HttpClient(_handler)
+            {
+                BaseAddress = new Uri("https://api.mistral.ai/v1/")
+            },
+            Options.Create(new MistralOptions { ApiKey = "test-key" }),
+            logger);
+
+        await service.AnalyzeAsync(
+            new AiAnalysisRequest("Content", AiAnalysisType.Summary));
+
+        Assert.DoesNotContain(
+            logger.Messages,
+            message => message.Contains(sensitiveContent, StringComparison.Ordinal));
+    }
+
     private sealed class MockHttpMessageHandler : DelegatingHandler
     {
         public HttpResponseMessage? Response { get; set; }
+        public int RequestCount { get; private set; }
 
         protected override Task<HttpResponseMessage> SendAsync(
             HttpRequestMessage request,
             CancellationToken cancellationToken)
         {
+            RequestCount++;
             return Task.FromResult(Response
                 ?? new HttpResponseMessage(HttpStatusCode.OK));
+        }
+    }
+
+    private sealed class CapturingLogger<T> : Microsoft.Extensions.Logging.ILogger<T>
+    {
+        public List<string> Messages { get; } = [];
+
+        public IDisposable? BeginScope<TState>(TState state)
+            where TState : notnull => null;
+
+        public bool IsEnabled(Microsoft.Extensions.Logging.LogLevel logLevel) => true;
+
+        public void Log<TState>(
+            Microsoft.Extensions.Logging.LogLevel logLevel,
+            Microsoft.Extensions.Logging.EventId eventId,
+            TState state,
+            Exception? exception,
+            Func<TState, Exception?, string> formatter)
+        {
+            Messages.Add(formatter(state, exception));
         }
     }
 }

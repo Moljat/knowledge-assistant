@@ -33,6 +33,12 @@ public sealed class MistralAiAnalysisService : IAiAnalysisService
         AiAnalysisRequest request,
         CancellationToken cancellationToken = default)
     {
+        if (string.IsNullOrWhiteSpace(_options.ApiKey))
+        {
+            throw new HttpRequestException(
+                "Mistral API credentials are not configured.");
+        }
+
         var systemPrompt = BuildSystemPrompt(request.Type);
         var userMessage = request.Type == AiAnalysisType.Question
             ? $"Context:\n{request.Content}\n\nQuestion:\n{request.Question}"
@@ -72,16 +78,12 @@ public sealed class MistralAiAnalysisService : IAiAnalysisService
         {
             _logger.LogError(
                 exception,
-                "Failed to parse Mistral response for {Type} analysis. Content: {Content}",
-                request.Type,
-                Truncate(content, 200));
+                "Failed to parse Mistral response for {Type} analysis.",
+                request.Type);
 
             return EmptyResult();
         }
     }
-
-    private static string Truncate(string value, int maxLength) =>
-        value.Length <= maxLength ? value : value[..maxLength] + "...";
 
     private static string BuildSystemPrompt(AiAnalysisType type) =>
         AiPrompts.BuildSystemPrompt(type);

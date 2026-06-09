@@ -54,6 +54,18 @@ Los huecos de mayor riesgo cerrados fueron el chat con contexto, las métricas d
 el panel de análisis IA y el chat global. Las ramas residuales pertenecen principalmente a
 variaciones de filtros y estados visuales ya cubiertos por recorridos representativos.
 
+## Validaciones de seguridad
+
+```powershell
+dotnet list KnowledgeAssistant.sln package --vulnerable --include-transitive
+git grep -n -I -E "(api[_-]?key|password|secret)"
+npm audit --omit=dev
+```
+
+La revisión incluye secretos rastreados, límites de entradas de IA, errores `ProblemDetails`,
+configuración HTTPS de Mistral y ausencia de contenido de proveedor en logs. `npm audit` debe
+ejecutarse desde una instalación que use un lockfile compatible con el workspace.
+
 ## Flujos end-to-end críticos
 
 Las pruebas de integración con `WebApplicationFactory` recorren la API HTTP y las capas de

@@ -23,6 +23,37 @@ public sealed class CoverageRiskTests
         Assert.Equal(20, repository.LastPageSize);
     }
 
+    [Theory]
+    [InlineData("")]
+    [InlineData("   ")]
+    public async Task ChatHandler_WithBlankQuestion_RejectsBeforeCallingDependencies(
+        string question)
+    {
+        var aiService = new CapturingAiService("Respuesta");
+        var repository = new StubRepository([]);
+        var handler = new ChatHandler(aiService, repository);
+
+        await Assert.ThrowsAsync<ArgumentException>(() =>
+            handler.HandleAsync(new ChatRequest(question)));
+
+        Assert.Null(aiService.LastRequest);
+        Assert.Equal(0, repository.LastPage);
+    }
+
+    [Fact]
+    public async Task ChatHandler_WithOversizedQuestion_RejectsInput()
+    {
+        var handler = new ChatHandler(
+            new CapturingAiService("Respuesta"),
+            new StubRepository([]));
+
+        var exception = await Assert.ThrowsAsync<ArgumentException>(() =>
+            handler.HandleAsync(new ChatRequest(
+                new string('x', AiInputValidator.MaxQuestionLength + 1))));
+
+        Assert.Equal("Question", exception.ParamName);
+    }
+
     [Fact]
     public async Task ChatHandler_WithRecords_AddsBoundedContext()
     {

@@ -70,3 +70,6 @@
 | TC-066 | Aplicacion | Metricas del dashboard | Mapea conteos y valores vacios para todos los estados |
 | TC-067 | Frontend IA | Acciones de analisis | Ejecuta resumen, clasificacion, recomendaciones y errores |
 | TC-068 | Frontend IA | Chat global | Maneja respuesta, respuesta vacia, error y solicitudes bloqueadas |
+| TC-069 | Seguridad | Pregunta IA invalida | Rechaza texto vacio o mayor a 1000 caracteres con ProblemDetails |
+| TC-070 | Configuracion | Mistral inseguro | Rechaza URL no HTTPS, modelo vacio y timeout fuera de rango |
+| TC-071 | Secretos | Credencial Mistral ausente | No envia la solicitud ni registra contenido sensible |

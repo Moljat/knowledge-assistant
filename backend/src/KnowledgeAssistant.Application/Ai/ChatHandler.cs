@@ -21,6 +21,11 @@ public sealed class ChatHandler(
 
     public async Task<ChatResponse> HandleAsync(ChatRequest request, CancellationToken cancellationToken = default)
     {
+        ArgumentNullException.ThrowIfNull(request);
+        var question = AiInputValidator.NormalizeQuestion(
+            request.Question,
+            nameof(request.Question));
+
         var recordsPaged = await repository.ListAsync(
             new KnowledgeRecordListFilters(null, null, null, null, null),
             1,
@@ -30,8 +35,8 @@ public sealed class ChatHandler(
         var context = BuildContext(recordsPaged.Items);
 
         var content = string.IsNullOrWhiteSpace(context)
-            ? request.Question
-            : $"Contexto del sistema de conocimiento:\n\n{context}\n\nPregunta del usuario:\n{request.Question}";
+            ? question
+            : $"Contexto del sistema de conocimiento:\n\n{context}\n\nPregunta del usuario:\n{question}";
 
         var result = await aiService.AnalyzeAsync(
             new AiAnalysisRequest(content, AiAnalysisType.Chat),

@@ -21,6 +21,10 @@ public sealed class AnalyzeRecordHandler(
     {
         ArgumentNullException.ThrowIfNull(command);
 
+        var question = command.Type == AiAnalysisType.Question
+            ? AiInputValidator.NormalizeQuestion(command.Question, nameof(command.Question))
+            : null;
+
         var record = await repository.GetByIdAsync(command.RecordId, cancellationToken);
 
         if (record is null) return null;
@@ -34,7 +38,7 @@ public sealed class AnalyzeRecordHandler(
                 new AiAnalysisRequest(
                     record.Content,
                     command.Type,
-                    command.Question),
+                    question),
                 cancellationToken);
 
             var recommendations = result.Recommendations.Count > 0

@@ -52,3 +52,16 @@ Se agregaron pruebas para chat con contexto y contenido truncado, métricas del 
 acciones del panel IA y respuestas exitosas, vacías o fallidas del chat global. Los archivos
 `ChatHandler.cs`, `DashboardStats.cs` y `GetDashboardStatsHandler.cs` pasaron de 0% a 100% de
 líneas; `ai-chat-popup.ts` alcanzó 100% y `ai-panel.ts` alcanzó 100% de líneas.
+
+## T6.3 - Seguridad, sanitización y configuración
+
+Validación ejecutada el 9 de junio de 2026:
+
+- no se encontraron secretos rastreados; `.env` permanece ignorado;
+- `dotnet list ... --vulnerable --include-transitive`: sin paquetes vulnerables;
+- entradas de chat y preguntas por registro limitadas a 1000 caracteres y normalizadas;
+- configuración Mistral validada para HTTPS, modelo obligatorio y timeout de 1 a 120 segundos;
+- una llave Mistral ausente impide la solicitud HTTP;
+- las respuestas inválidas del proveedor ya no se incluyen en logs;
+- `npm audit` no pudo ejecutarse porque la instalación workspace actual no dispone de un
+  lockfile raíz compatible; no se generó uno para evitar cambios de dependencias fuera de tarea.
