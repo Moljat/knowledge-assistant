@@ -1,5 +1,6 @@
 using KnowledgeAssistant.Application.Abstractions;
 using KnowledgeAssistant.Infrastructure.Ai;
+using KnowledgeAssistant.Infrastructure.BackgroundServices;
 using KnowledgeAssistant.Infrastructure.Persistence;
 using KnowledgeAssistant.Infrastructure.Persistence.Initialization;
 using KnowledgeAssistant.Infrastructure.Persistence.Repositories;
@@ -44,6 +45,7 @@ public static class DependencyInjection
             .Bind(configuration.GetSection(MistralOptions.SectionName));
 
         services.AddTransient<MistralResilienceHandler>();
+        services.AddHostedService<AiProcessingBackgroundService>();
 
         services.AddHttpClient<IAiAnalysisService, MistralAiAnalysisService>((sp, client) =>
         {
