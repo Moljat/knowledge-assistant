@@ -64,8 +64,24 @@ public sealed class MistralAiAnalysisService : IAiAnalysisService
             return EmptyResult();
         }
 
-        return ParseResult(content, request.Type);
+        try
+        {
+            return ParseResult(content, request.Type);
+        }
+        catch (JsonException exception)
+        {
+            _logger.LogError(
+                exception,
+                "Failed to parse Mistral response for {Type} analysis. Content: {Content}",
+                request.Type,
+                Truncate(content, 200));
+
+            return EmptyResult();
+        }
     }
+
+    private static string Truncate(string value, int maxLength) =>
+        value.Length <= maxLength ? value : value[..maxLength] + "...";
 
     private static string BuildSystemPrompt(AiAnalysisType type) =>
         AiPrompts.BuildSystemPrompt(type);

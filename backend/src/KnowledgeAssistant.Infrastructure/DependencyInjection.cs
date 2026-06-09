@@ -43,6 +43,8 @@ public static class DependencyInjection
             .AddOptions<MistralOptions>()
             .Bind(configuration.GetSection(MistralOptions.SectionName));
 
+        services.AddTransient<MistralResilienceHandler>();
+
         services.AddHttpClient<IAiAnalysisService, MistralAiAnalysisService>((sp, client) =>
         {
             var options = sp.GetRequiredService<IOptions<MistralOptions>>().Value;
@@ -50,7 +52,7 @@ public static class DependencyInjection
             client.Timeout = TimeSpan.FromSeconds(options.TimeoutSeconds);
             client.DefaultRequestHeaders.Authorization =
                 new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", options.ApiKey);
-        });
+        }).AddHttpMessageHandler<MistralResilienceHandler>();
 
         return services;
     }
