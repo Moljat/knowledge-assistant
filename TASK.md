@@ -12,7 +12,7 @@ Las tareas están ordenadas para producir incrementos pequeños y demostrables.
 ## Fase 1: Modelo y persistencia
 
 - [x] `T1.1` Cerrar el modelo de `KnowledgeRecord` y sus invariantes.
-- [ ] `T1.2` Crear configuración EF Core y primera migración.
+- [x] `T1.2` Crear configuración EF Core y primera migración.
 - [ ] `T1.3` Implementar repositorio y unidad de trabajo.
 - [ ] `T1.4` Agregar datos semilla para demostración.
 - [ ] `T1.5` Probar reglas de dominio y persistencia.

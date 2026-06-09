@@ -18,3 +18,5 @@
 | TC-014 | Dominio | Flujo de análisis válido | Avanza de pendiente a completado |
 | TC-015 | Dominio | Actualización con tipo inválido | Falla sin modificar parcialmente |
 | TC-016 | Dominio | Archivar durante análisis | Se rechaza hasta finalizar el proceso |
+| TC-017 | Persistencia | Inspeccionar modelo EF Core | Tabla, columnas e índices coinciden con el dominio |
+| TC-018 | Persistencia | Generar script idempotente | Incluye historial y migración inicial |
