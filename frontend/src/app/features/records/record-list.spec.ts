@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
+import { provideRouter } from '@angular/router';
 import { of } from 'rxjs';
 import { KnowledgeRecord, KnowledgeRecordService } from './knowledge-record.service';
 import { RecordList } from './record-list';
@@ -39,6 +40,7 @@ describe('RecordList', () => {
       imports: [RecordList],
       providers: [
         provideNoopAnimations(),
+        provideRouter([]),
         { provide: KnowledgeRecordService, useValue: records }
       ]
     }).compileComponents();

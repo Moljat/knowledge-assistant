@@ -30,6 +30,20 @@ export interface KnowledgeRecordListFilters {
   aiStatus?: number;
 }
 
+export interface CreateKnowledgeRecordRequest {
+  title: string;
+  content: string;
+  source: string | null;
+  type: number;
+}
+
+export interface UpdateKnowledgeRecordRequest {
+  title: string;
+  content: string;
+  source: string | null;
+  type: number;
+}
+
 export interface DashboardStats {
   totalRecords: number;
   byStatus: Record<string, number>;
@@ -55,6 +69,18 @@ export class KnowledgeRecordService {
 
   delete(id: string): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${id}`);
+  }
+
+  getById(id: string): Observable<KnowledgeRecord> {
+    return this.http.get<KnowledgeRecord>(`${this.baseUrl}/${id}`);
+  }
+
+  create(request: CreateKnowledgeRecordRequest): Observable<KnowledgeRecord> {
+    return this.http.post<KnowledgeRecord>(this.baseUrl, request);
+  }
+
+  update(id: string, request: UpdateKnowledgeRecordRequest): Observable<KnowledgeRecord> {
+    return this.http.put<KnowledgeRecord>(`${this.baseUrl}/${id}`, request);
   }
 
   getStats(): Observable<DashboardStats> {

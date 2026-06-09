@@ -3,7 +3,7 @@
     <p class="eyebrow">Informacion empresarial</p>
     <h1>Registros</h1>
   </div>
-  <button mat-flat-button disabled>Nuevo registro</button>
+  <a mat-flat-button routerLink="/records/new">Nuevo registro</a>
 </section>
 
 <section class="filters" aria-label="Filtros">
@@ -76,7 +76,8 @@
 
         <ng-container matColumnDef="actions">
           <th mat-header-cell *matHeaderCellDef></th>
-          <td mat-cell *matCellDef="let record">
+          <td mat-cell *matCellDef="let record" class="cell-actions">
+            <a mat-button [routerLink]="['/records', record.id, 'edit']">Editar</a>
             <button mat-button color="warn" type="button" (click)="confirmDelete(record)">
               Eliminar
             </button>
