@@ -38,6 +38,17 @@ npm --workspace frontend run test:ci
 - Las pruebas no dependen de una llave real de Mistral salvo la suite marcada como externa.
 - Las evidencias de entrega se guardarán en `documentation/evidence/`.
 
+## Flujos end-to-end críticos
+
+Las pruebas de integración con `WebApplicationFactory` recorren la API HTTP y las capas de
+aplicación y dominio con dependencias externas controladas:
+
+- ciclo CRUD completo: crear, buscar, editar, consultar y eliminar un registro;
+- análisis de IA: crear, solicitar resumen y verificar que el resultado queda persistido.
+
+El adaptador de IA se sustituye solamente dentro del host de pruebas. Producción sigue usando
+la integración real configurada en `Infrastructure`.
+
 ## Frontend
 
 `ng build` y `ng test` requieren un navegador Chromium disponible. El script

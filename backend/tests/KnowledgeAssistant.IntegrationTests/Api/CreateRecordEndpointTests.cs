@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Http.Json;
 using KnowledgeAssistant.Api.Controllers;
 using KnowledgeAssistant.Application.Abstractions;
+using KnowledgeAssistant.Application.Ai;
 using KnowledgeAssistant.Domain.Entities;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +14,76 @@ namespace KnowledgeAssistant.IntegrationTests.Api;
 
 public sealed class CreateRecordEndpointTests
 {
+    [Fact]
+    public async Task CriticalRecordLifecycle_ThroughHttp_CompletesSuccessfully()
+    {
+        using var factory = new RecordsApiFactory();
+        var client = factory.CreateClient();
+
+        var created = await CreateRecordAsync(client, "Registro de ciclo completo");
+
+        var listResponse = await client.GetAsync("/api/v1/records?search=ciclo%20completo");
+        listResponse.EnsureSuccessStatusCode();
+        var list = await listResponse.Content.ReadFromJsonAsync<PagedKnowledgeRecordResponse>();
+        Assert.NotNull(list);
+        Assert.Contains(list.Items, item => item.Id == created.Id);
+
+        var updateResponse = await client.PutAsJsonAsync(
+            $"/api/v1/records/{created.Id}",
+            new UpdateKnowledgeRecordRequest(
+                "Registro actualizado de extremo a extremo",
+                "Contenido actualizado",
+                "Prueba E2E",
+                KnowledgeRecordType.Document));
+        updateResponse.EnsureSuccessStatusCode();
+        var updated = await updateResponse.Content.ReadFromJsonAsync<KnowledgeRecordResponse>();
+        Assert.NotNull(updated);
+        Assert.Equal("Registro actualizado de extremo a extremo", updated.Title);
+        Assert.Equal(KnowledgeRecordType.Document, updated.Type);
+
+        var getResponse = await client.GetAsync($"/api/v1/records/{created.Id}");
+        getResponse.EnsureSuccessStatusCode();
+        var detail = await getResponse.Content.ReadFromJsonAsync<KnowledgeRecordResponse>();
+        Assert.NotNull(detail);
+        Assert.Equal(updated.Title, detail.Title);
+
+        var deleteResponse = await client.DeleteAsync($"/api/v1/records/{created.Id}");
+        Assert.Equal(HttpStatusCode.NoContent, deleteResponse.StatusCode);
+
+        var getAfterDelete = await client.GetAsync($"/api/v1/records/{created.Id}");
+        Assert.Equal(HttpStatusCode.NotFound, getAfterDelete.StatusCode);
+    }
+
+    [Fact]
+    public async Task CriticalAiAnalysisFlow_ThroughHttp_PersistsResults()
+    {
+        using var factory = new RecordsApiFactory();
+        var client = factory.CreateClient();
+        var created = await CreateRecordAsync(client, "Registro para analizar");
+
+        var analysisResponse = await client.PostAsync(
+            $"/api/v1/records/{created.Id}/ai/summary",
+            null);
+
+        analysisResponse.EnsureSuccessStatusCode();
+        var analyzed = await analysisResponse.Content
+            .ReadFromJsonAsync<KnowledgeRecordResponse>();
+        Assert.NotNull(analyzed);
+        Assert.Equal(AiProcessingStatus.Completed, analyzed.AiStatus);
+        Assert.Equal("Resumen generado para pruebas.", analyzed.Summary);
+        Assert.Equal("Operaciones", analyzed.Category);
+        Assert.Equal("Revisar el resultado.", analyzed.Recommendations);
+
+        var detailResponse = await client.GetAsync($"/api/v1/records/{created.Id}");
+        detailResponse.EnsureSuccessStatusCode();
+        var persisted = await detailResponse.Content
+            .ReadFromJsonAsync<KnowledgeRecordResponse>();
+        Assert.NotNull(persisted);
+        Assert.Equal(AiProcessingStatus.Completed, persisted.AiStatus);
+        Assert.Equal(analyzed.Summary, persisted.Summary);
+        Assert.NotNull(persisted.AiProcessedAtUtc);
+    }
+
     [Fact]
     public async Task GetRecord_WhenRecordExists_ReturnsDetail()
     {
@@ -303,8 +374,10 @@ public sealed class CreateRecordEndpointTests
             {
                 services.RemoveAll<IKnowledgeRecordRepository>();
                 services.RemoveAll<IUnitOfWork>();
+                services.RemoveAll<IAiAnalysisService>();
                 services.AddSingleton<IKnowledgeRecordRepository, InMemoryRepository>();
                 services.AddSingleton<IUnitOfWork, SuccessfulUnitOfWork>();
+                services.AddSingleton<IAiAnalysisService, StubAiAnalysisService>();
             });
         }
     }
@@ -418,6 +491,20 @@ public sealed class CreateRecordEndpointTests
         public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             return Task.FromResult(1);
+        }
+    }
+
+    private sealed class StubAiAnalysisService : IAiAnalysisService
+    {
+        public Task<AiAnalysisResult> AnalyzeAsync(
+            AiAnalysisRequest request,
+            CancellationToken cancellationToken = default)
+        {
+            return Task.FromResult(new AiAnalysisResult(
+                "Resumen generado para pruebas.",
+                "Operaciones",
+                ["Revisar el resultado."],
+                null));
         }
     }
 }
