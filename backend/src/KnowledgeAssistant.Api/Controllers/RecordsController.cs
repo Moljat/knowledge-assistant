@@ -1,4 +1,5 @@
 using KnowledgeAssistant.Api.Errors;
+using KnowledgeAssistant.Application.Ai;
 using KnowledgeAssistant.Application.Records;
 using KnowledgeAssistant.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +14,7 @@ public sealed class RecordsController(
     IListKnowledgeRecordsHandler listHandler,
     IUpdateKnowledgeRecordHandler updateHandler,
     IDeleteKnowledgeRecordHandler deleteHandler,
+    IAnalyzeRecordHandler analyzeHandler,
     ILogger<RecordsController> logger) : ControllerBase
 {
     [HttpGet("{id:guid}")]
@@ -170,6 +172,105 @@ public sealed class RecordsController(
         return NoContent();
     }
 
+    [HttpPost("{id:guid}/ai/summary")]
+    [ProducesResponseType<KnowledgeRecordResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<KnowledgeRecordResponse>> AnalyzeSummary(
+        Guid id,
+        CancellationToken cancellationToken)
+    {
+        return await Analyze(id, AiAnalysisType.Summary, null, cancellationToken);
+    }
+
+    [HttpPost("{id:guid}/ai/classification")]
+    [ProducesResponseType<KnowledgeRecordResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<KnowledgeRecordResponse>> AnalyzeClassification(
+        Guid id,
+        CancellationToken cancellationToken)
+    {
+        return await Analyze(id, AiAnalysisType.Classification, null, cancellationToken);
+    }
+
+    [HttpPost("{id:guid}/ai/recommendations")]
+    [ProducesResponseType<KnowledgeRecordResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<KnowledgeRecordResponse>> AnalyzeRecommendations(
+        Guid id,
+        CancellationToken cancellationToken)
+    {
+        return await Analyze(id, AiAnalysisType.Recommendations, null, cancellationToken);
+    }
+
+    [HttpPost("{id:guid}/ai/questions")]
+    [ProducesResponseType<KnowledgeRecordResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<KnowledgeRecordResponse>> AnalyzeQuestion(
+        Guid id,
+        AiQuestionRequest request,
+        CancellationToken cancellationToken)
+    {
+        return await Analyze(id, AiAnalysisType.Question, request.Question, cancellationToken);
+    }
+
+    private async Task<ActionResult<KnowledgeRecordResponse>> Analyze(
+        Guid id,
+        AiAnalysisType type,
+        string? question,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            var record = await analyzeHandler.HandleAsync(
+                new AnalyzeRecordCommand(id, type, question),
+                cancellationToken);
+
+            if (record is null)
+            {
+                return NotFound(CreateNotFoundProblem(id));
+            }
+
+            logger.LogInformation(
+                "Completed {Type} analysis for record {RecordId}.",
+                type,
+                id);
+
+            return Ok(KnowledgeRecordResponse.FromResult(record));
+        }
+        catch (InvalidOperationException exception)
+        {
+            logger.LogWarning(
+                exception,
+                "Rejected analysis for record {RecordId} because a business rule failed.",
+                id);
+
+            return BadRequest(CreateBusinessRuleProblem(
+                "AI analysis cannot be performed.",
+                exception.Message));
+        }
+        catch (HttpRequestException exception)
+        {
+            logger.LogError(
+                exception,
+                "AI service request failed for record {RecordId}.",
+                id);
+
+            return StatusCode(
+                StatusCodes.Status502BadGateway,
+                new ProblemDetails
+                {
+                    Status = StatusCodes.Status502BadGateway,
+                    Title = "AI service unavailable.",
+                    Type = ApiProblemTypes.ServiceUnavailable,
+                    Detail = "The AI analysis service is temporarily unavailable."
+                });
+        }
+    }
+
     private ActionResult CreateValidationProblem(
         ArgumentException exception,
         string fallbackKey)
@@ -254,6 +355,8 @@ public sealed record UpdateKnowledgeRecordRequest(
     string Content,
     string? Source,
     KnowledgeRecordType Type);
+
+public sealed record AiQuestionRequest(string Question);
 
 public sealed record KnowledgeRecordResponse(
     Guid Id,

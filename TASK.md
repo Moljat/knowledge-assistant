@@ -42,10 +42,10 @@ Las tareas están ordenadas para producir incrementos pequeños y demostrables.
 
 - [x] `T4.1` Configurar cliente Mistral y manejo seguro de credenciales.
 - [x] `T4.2` Diseñar prompts reutilizables y respuestas JSON estructuradas.
-- [ ] `T4.3` Implementar resumen inteligente.
-- [ ] `T4.4` Implementar clasificación automática.
-- [ ] `T4.5` Implementar recomendaciones.
-- [ ] `T4.6` Implementar preguntas sobre un registro o conjunto filtrado.
+- [x] `T4.3` Implementar resumen inteligente.
+- [x] `T4.4` Implementar clasificación automática.
+- [x] `T4.5` Implementar recomendaciones.
+- [x] `T4.6` Implementar preguntas sobre un registro o conjunto filtrado.
 - [ ] `T4.7` Manejar timeouts, rate limits, respuestas inválidas y reintentos acotados.
 - [ ] `T4.8` Probar el adaptador con HTTP simulado y una prueba real opcional.
 
