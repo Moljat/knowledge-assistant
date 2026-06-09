@@ -13,7 +13,8 @@ describe('Dashboard', () => {
     totalRecords: 10,
     byStatus: { Draft: 3, Active: 6, Archived: 1 },
     byType: { Document: 4, Note: 4, BusinessRecord: 2 },
-    byAiStatus: { NotRequested: 7, Pending: 1, Processing: 0, Completed: 2, Failed: 0 }
+    byAiStatus: { NotRequested: 7, Pending: 1, Processing: 0, Completed: 2, Failed: 0 },
+    totalRetries: 3
   };
 
   beforeEach(async () => {
@@ -47,7 +48,7 @@ describe('Dashboard', () => {
 
     const compiled = fixture.nativeElement as HTMLElement;
     const values = compiled.querySelectorAll('.indicator-value');
-    expect(values.length).toBe(4);
+    expect(values.length).toBe(7);
     expect(values[0].textContent).toContain('10');
     discardPeriodicTasks();
   }));

@@ -60,8 +60,8 @@ Las tareas están ordenadas para producir incrementos pequeños y demostrables.
 
 - [x] `T5.1` Crear un `BackgroundService` para procesar registros pendientes.
 - [x] `T5.2` Añadir estados, reintentos e idempotencia.
-- [ ] `T5.3` Exponer métricas operativas básicas del procesamiento.
-- [ ] `T5.4` Probar ejecución, cancelación y recuperación de errores.
+- [x] `T5.3` Exponer métricas operativas básicas del procesamiento.
+- [x] `T5.4` Probar ejecución, cancelación y recuperación de errores.
 
 ## Fase 6: Calidad y entrega
 

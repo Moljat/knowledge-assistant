@@ -133,7 +133,8 @@ describe('KnowledgeRecordService', () => {
       totalRecords: 10,
       byStatus: { Draft: 3, Active: 6, Archived: 1 },
       byType: { Document: 4, Note: 4, BusinessRecord: 2 },
-      byAiStatus: { NotRequested: 7, Pending: 1, Processing: 0, Completed: 2, Failed: 0 }
+      byAiStatus: { NotRequested: 7, Pending: 1, Processing: 0, Completed: 2, Failed: 0 },
+      totalRetries: 3
     });
   });
 });

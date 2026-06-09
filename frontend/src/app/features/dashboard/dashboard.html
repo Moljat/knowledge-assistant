@@ -46,6 +46,27 @@
           <span class="indicator-label">Documentos</span>
         </mat-card-content>
       </mat-card>
+
+      <mat-card appearance="outlined" class="indicator">
+        <mat-card-content>
+          <span class="indicator-value">{{ state.stats.byAiStatus['Pending'] || 0 }}</span>
+          <span class="indicator-label">Pendientes IA</span>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card appearance="outlined" class="indicator">
+        <mat-card-content>
+          <span class="indicator-value">{{ state.stats.byAiStatus['Failed'] || 0 }}</span>
+          <span class="indicator-label">Fallidos IA</span>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card appearance="outlined" class="indicator">
+        <mat-card-content>
+          <span class="indicator-value">{{ state.stats.totalRetries }}</span>
+          <span class="indicator-label">Reintentos IA</span>
+        </mat-card-content>
+      </mat-card>
     </section>
   }
 }
