@@ -8,6 +8,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
+import { RouterLink } from '@angular/router';
 import {
   BehaviorSubject,
   Subject,
@@ -38,6 +39,7 @@ import {
     MatSelectModule,
     MatTableModule,
     ReactiveFormsModule,
+    RouterLink,
   ],
   templateUrl: './record-list.html',
   styleUrl: './record-list.scss',
