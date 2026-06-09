@@ -49,6 +49,33 @@ Respuesta `201 Created`:
 
 Los payloads invalidos responden `400 Bad Request` con `ValidationProblemDetails`.
 
+### Consultar detalle
+
+`GET /api/v1/records/{id}`
+
+Respuesta `200 OK`: usa el mismo contrato `KnowledgeRecordResponse` del alta. Cuando el
+identificador no existe responde `404 Not Found` con `ProblemDetails`.
+
+### Listar registros
+
+`GET /api/v1/records?page=1&pageSize=20`
+
+`page` inicia en `1`. `pageSize` acepta valores de `1` a `100`.
+
+Respuesta `200 OK`:
+
+```json
+{
+  "items": [],
+  "page": 1,
+  "pageSize": 20,
+  "totalItems": 0,
+  "totalPages": 0
+}
+```
+
+La paginacion invalida responde `400 Bad Request` con `ValidationProblemDetails`.
+
 ## Inteligencia Artificial
 
 - `POST /records/{id}/ai/summary`: generar resumen.

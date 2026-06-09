@@ -14,6 +14,75 @@ namespace KnowledgeAssistant.IntegrationTests.Api;
 public sealed class CreateRecordEndpointTests
 {
     [Fact]
+    public async Task GetRecord_WhenRecordExists_ReturnsDetail()
+    {
+        using var factory = new RecordsApiFactory();
+        var client = factory.CreateClient();
+        var created = await CreateRecordAsync(client, "Registro detalle");
+
+        var response = await client.GetAsync($"/api/v1/records/{created.Id}");
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        var body = await response.Content.ReadFromJsonAsync<KnowledgeRecordResponse>();
+
+        Assert.NotNull(body);
+        Assert.Equal(created.Id, body.Id);
+        Assert.Equal("Registro detalle", body.Title);
+    }
+
+    [Fact]
+    public async Task GetRecord_WhenRecordDoesNotExist_ReturnsProblemDetails()
+    {
+        using var factory = new RecordsApiFactory();
+        var client = factory.CreateClient();
+
+        var response = await client.GetAsync($"/api/v1/records/{Guid.NewGuid()}");
+
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        var body = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+
+        Assert.NotNull(body);
+        Assert.Equal((int)HttpStatusCode.NotFound, body.Status);
+    }
+
+    [Fact]
+    public async Task ListRecords_WithPagination_ReturnsRequestedPage()
+    {
+        using var factory = new RecordsApiFactory();
+        var client = factory.CreateClient();
+        await CreateRecordAsync(client, "Registro uno");
+        await CreateRecordAsync(client, "Registro dos");
+        await CreateRecordAsync(client, "Registro tres");
+
+        var response = await client.GetAsync("/api/v1/records?page=2&pageSize=2");
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        var body = await response.Content.ReadFromJsonAsync<PagedKnowledgeRecordResponse>();
+
+        Assert.NotNull(body);
+        Assert.Equal(2, body.Page);
+        Assert.Equal(2, body.PageSize);
+        Assert.Equal(3, body.TotalItems);
+        Assert.Equal(2, body.TotalPages);
+        Assert.Single(body.Items);
+    }
+
+    [Fact]
+    public async Task ListRecords_WithInvalidPagination_ReturnsValidationProblem()
+    {
+        using var factory = new RecordsApiFactory();
+        var client = factory.CreateClient();
+
+        var response = await client.GetAsync("/api/v1/records?page=0&pageSize=20");
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        var body = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
+
+        Assert.NotNull(body);
+        Assert.Contains("page", body.Errors.Keys);
+    }
+
+    [Fact]
     public async Task PostRecord_WithValidPayload_ReturnsCreatedRecord()
     {
         using var factory = new RecordsApiFactory();
@@ -60,6 +129,24 @@ public sealed class CreateRecordEndpointTests
         Assert.Contains("title", body.Errors.Keys);
     }
 
+    private static async Task<KnowledgeRecordResponse> CreateRecordAsync(
+        HttpClient client,
+        string title)
+    {
+        var response = await client.PostAsJsonAsync(
+            "/api/v1/records",
+            new CreateKnowledgeRecordRequest(
+                title,
+                "Contenido",
+                "Pruebas",
+                KnowledgeRecordType.Note));
+        response.EnsureSuccessStatusCode();
+
+        var body = await response.Content.ReadFromJsonAsync<KnowledgeRecordResponse>();
+
+        return body!;
+    }
+
     private sealed class RecordsApiFactory : WebApplicationFactory<Program>
     {
         protected override void ConfigureWebHost(IWebHostBuilder builder)
@@ -99,6 +186,25 @@ public sealed class CreateRecordEndpointTests
             CancellationToken cancellationToken = default)
         {
             return Task.FromResult(_records.ContainsKey(id));
+        }
+
+        public Task<PagedKnowledgeRecordResult> ListAsync(
+            int page,
+            int pageSize,
+            CancellationToken cancellationToken = default)
+        {
+            var orderedRecords = _records.Values
+                .OrderByDescending(record => record.CreatedAtUtc)
+                .ThenBy(record => record.Title)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            return Task.FromResult(new PagedKnowledgeRecordResult(
+                orderedRecords,
+                page,
+                pageSize,
+                _records.Count));
         }
 
         public void Add(KnowledgeRecord record)

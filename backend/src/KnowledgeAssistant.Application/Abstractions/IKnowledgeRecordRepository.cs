@@ -16,7 +16,18 @@ public interface IKnowledgeRecordRepository
         Guid id,
         CancellationToken cancellationToken = default);
 
+    Task<PagedKnowledgeRecordResult> ListAsync(
+        int page,
+        int pageSize,
+        CancellationToken cancellationToken = default);
+
     void Add(KnowledgeRecord record);
 
     void Remove(KnowledgeRecord record);
 }
+
+public sealed record PagedKnowledgeRecordResult(
+    IReadOnlyList<KnowledgeRecord> Items,
+    int Page,
+    int PageSize,
+    int TotalItems);

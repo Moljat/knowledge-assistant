@@ -7,8 +7,55 @@ namespace KnowledgeAssistant.Api.Controllers;
 [ApiController]
 [Route("api/v1/records")]
 public sealed class RecordsController(
-    ICreateKnowledgeRecordHandler createHandler) : ControllerBase
+    ICreateKnowledgeRecordHandler createHandler,
+    IGetKnowledgeRecordByIdHandler getByIdHandler,
+    IListKnowledgeRecordsHandler listHandler) : ControllerBase
 {
+    [HttpGet("{id:guid}")]
+    [ProducesResponseType<KnowledgeRecordResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<KnowledgeRecordResponse>> GetById(
+        Guid id,
+        CancellationToken cancellationToken)
+    {
+        var record = await getByIdHandler.HandleAsync(id, cancellationToken);
+
+        if (record is null)
+        {
+            return NotFound(new ProblemDetails
+            {
+                Status = StatusCodes.Status404NotFound,
+                Title = "Knowledge record not found.",
+                Detail = $"No knowledge record exists with id '{id}'."
+            });
+        }
+
+        return Ok(KnowledgeRecordResponse.FromResult(record));
+    }
+
+    [HttpGet]
+    [ProducesResponseType<PagedKnowledgeRecordResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<PagedKnowledgeRecordResponse>> List(
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 20,
+        CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            var records = await listHandler.HandleAsync(
+                new ListKnowledgeRecordsQuery(page, pageSize),
+                cancellationToken);
+
+            return Ok(PagedKnowledgeRecordResponse.FromResult(records));
+        }
+        catch (ArgumentOutOfRangeException exception)
+        {
+            ModelState.AddModelError(exception.ParamName ?? "pagination", exception.Message);
+            return ValidationProblem(ModelState);
+        }
+    }
+
     [HttpPost]
     [ProducesResponseType<KnowledgeRecordResponse>(StatusCodes.Status201Created)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
@@ -34,6 +81,27 @@ public sealed class RecordsController(
             ModelState.AddModelError(exception.ParamName ?? "request", exception.Message);
             return ValidationProblem(ModelState);
         }
+    }
+}
+
+public sealed record PagedKnowledgeRecordResponse(
+    IReadOnlyList<KnowledgeRecordResponse> Items,
+    int Page,
+    int PageSize,
+    int TotalItems,
+    int TotalPages)
+{
+    public static PagedKnowledgeRecordResponse FromResult(
+        PagedResult<KnowledgeRecordResult> result)
+    {
+        return new PagedKnowledgeRecordResponse(
+            result.Items
+                .Select(KnowledgeRecordResponse.FromResult)
+                .ToList(),
+            result.Page,
+            result.PageSize,
+            result.TotalItems,
+            result.TotalPages);
     }
 }
 

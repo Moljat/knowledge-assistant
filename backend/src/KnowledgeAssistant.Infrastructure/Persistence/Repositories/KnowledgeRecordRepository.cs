@@ -33,6 +33,29 @@ public sealed class KnowledgeRecordRepository(KnowledgeAssistantDbContext contex
             .AnyAsync(record => record.Id == id, cancellationToken);
     }
 
+    public async Task<PagedKnowledgeRecordResult> ListAsync(
+        int page,
+        int pageSize,
+        CancellationToken cancellationToken = default)
+    {
+        var totalItems = await context.KnowledgeRecords
+            .AsNoTracking()
+            .CountAsync(cancellationToken);
+        var items = await context.KnowledgeRecords
+            .AsNoTracking()
+            .OrderByDescending(record => record.CreatedAtUtc)
+            .ThenBy(record => record.Title)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync(cancellationToken);
+
+        return new PagedKnowledgeRecordResult(
+            items,
+            page,
+            pageSize,
+            totalItems);
+    }
+
     public void Add(KnowledgeRecord record)
     {
         ArgumentNullException.ThrowIfNull(record);
