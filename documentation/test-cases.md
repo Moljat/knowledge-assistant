@@ -64,3 +64,5 @@
 | TC-060 | Frontend | Listar con filtros | Serializa filtros como query params |
 | TC-061 | API | Error de validacion | Responde application/problem+json con tipo y traceId |
 | TC-062 | API | Recurso no encontrado | Responde ProblemDetails con tipo not-found y traceId |
+| TC-063 | E2E API | Ciclo CRUD completo | Crea, busca, edita, consulta y elimina el registro por HTTP |
+| TC-064 | E2E IA | Analizar y persistir resumen | Completa el analisis y conserva los resultados al consultar |

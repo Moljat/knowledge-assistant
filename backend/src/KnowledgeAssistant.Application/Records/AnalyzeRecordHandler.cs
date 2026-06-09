@@ -26,6 +26,7 @@ public sealed class AnalyzeRecordHandler(
         if (record is null) return null;
 
         record.RequestAiAnalysis();
+        record.StartAiAnalysis();
 
         try
         {

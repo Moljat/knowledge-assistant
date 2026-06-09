@@ -65,7 +65,7 @@ Las tareas están ordenadas para producir incrementos pequeños y demostrables.
 
 ## Fase 6: Calidad y entrega
 
-- [ ] `T6.1` Completar pruebas end-to-end de flujos críticos.
+- [x] `T6.1` Completar pruebas end-to-end de flujos críticos.
 - [ ] `T6.2` Medir cobertura y cerrar huecos de riesgo.
 - [ ] `T6.3` Validar seguridad, sanitización y configuración.
 - [ ] `T6.4` Crear workflow de CI para build y pruebas.
