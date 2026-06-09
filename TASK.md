@@ -33,7 +33,7 @@ Las tareas están ordenadas para producir incrementos pequeños y demostrables.
 - [x] `T3.2` Implementar dashboard con indicadores.
 - [x] `T3.3` Implementar tabla paginada, búsqueda y filtros.
 - [x] `T3.4` Implementar formulario reactivo de alta y edición.
-- [ ] `T3.5` Agregar estados de carga, vacíos y errores.
+- [x] `T3.5` Agregar estados de carga, vacíos y errores.
 - [ ] `T3.6` Probar componentes, servicios e interacciones.
 
 ## Fase 4: Mistral e IA

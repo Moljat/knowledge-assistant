@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
-import { of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { KnowledgeRecord, KnowledgeRecordService } from './knowledge-record.service';
 import { RecordList } from './record-list';
 
@@ -26,15 +26,22 @@ describe('RecordList', () => {
       'list'
     ]);
     records.list.and.returnValue(
-      of({
-        items: [record],
-        page: 1,
-        pageSize: 10,
-        totalItems: 1,
-        totalPages: 1
+      new Observable((sub) => {
+        setTimeout(() => {
+          sub.next({
+            items: [record],
+            page: 1,
+            pageSize: 10,
+            totalItems: 1,
+            totalPages: 1
+          });
+          sub.complete();
+        });
       })
     );
-    records.delete.and.returnValue(of(undefined));
+    records.delete.and.returnValue(
+      new Observable((sub) => { sub.next(undefined); sub.complete(); })
+    );
 
     await TestBed.configureTestingModule({
       imports: [RecordList],
@@ -96,5 +103,49 @@ describe('RecordList', () => {
     expect(compiled.textContent).toContain('Estado');
     expect(compiled.textContent).toContain('Tipo');
     expect(compiled.textContent).toContain('IA');
+  }));
+
+  it('should show loading spinner initially', fakeAsync(() => {
+    fixture = TestBed.createComponent(RecordList);
+    fixture.detectChanges();
+
+    const spinner = fixture.nativeElement.querySelector('mat-spinner');
+    expect(spinner).toBeTruthy();
+  }));
+
+  it('should show empty state when no records', fakeAsync(() => {
+    records.list.and.returnValue(
+      new Observable((sub) => {
+        setTimeout(() => {
+          sub.next({
+            items: [], page: 1, pageSize: 10, totalItems: 0, totalPages: 0
+          });
+          sub.complete();
+        });
+      })
+    );
+    fixture = TestBed.createComponent(RecordList);
+    fixture.detectChanges();
+    tick();
+    fixture.detectChanges();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+    expect(compiled.textContent).toContain('No hay registros para mostrar');
+  }));
+
+  it('should show error state on service failure', fakeAsync(() => {
+    records.list.and.returnValue(
+      new Observable((sub) => {
+        setTimeout(() => { sub.error(new Error('fail')); });
+      })
+    );
+
+    fixture = TestBed.createComponent(RecordList);
+    fixture.detectChanges();
+    tick();
+    fixture.detectChanges();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+    expect(compiled.textContent).toContain('No se pudieron cargar los registros');
   }));
 });
