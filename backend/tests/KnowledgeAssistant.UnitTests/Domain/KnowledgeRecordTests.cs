@@ -248,7 +248,7 @@ public sealed class KnowledgeRecordTests
     }
 
     [Fact]
-    public void FailAiAnalysis_FromProcessing_StoresError()
+    public void FailAiAnalysis_FromProcessing_SetsPendingForRetry()
     {
         var record = CreateRecord();
         var failedAt = InitialTime.AddMinutes(3);
@@ -257,13 +257,14 @@ public sealed class KnowledgeRecordTests
 
         record.FailAiAnalysis("  Mistral timeout  ", failedAt);
 
-        Assert.Equal(AiProcessingStatus.Failed, record.AiStatus);
+        Assert.Equal(AiProcessingStatus.Pending, record.AiStatus);
+        Assert.Equal(1, record.AiRetryCount);
         Assert.Equal("Mistral timeout", record.AiError);
         Assert.Equal(failedAt, record.AiProcessedAtUtc);
     }
 
     [Fact]
-    public void FailAiAnalysis_FromPending_StoresErrorWithoutStarting()
+    public void FailAiAnalysis_FromPending_SetsPendingForRetry()
     {
         var record = CreateRecord();
         var failedAt = InitialTime.AddMinutes(2);
@@ -271,9 +272,46 @@ public sealed class KnowledgeRecordTests
 
         record.FailAiAnalysis("  Rate limit  ", failedAt);
 
-        Assert.Equal(AiProcessingStatus.Failed, record.AiStatus);
+        Assert.Equal(AiProcessingStatus.Pending, record.AiStatus);
+        Assert.Equal(1, record.AiRetryCount);
         Assert.Equal("Rate limit", record.AiError);
         Assert.Equal(failedAt, record.AiProcessedAtUtc);
+    }
+
+    [Fact]
+    public void FailAiAnalysis_AfterMaxRetries_SetsFailed()
+    {
+        var record = CreateRecord();
+        record.RequestAiAnalysis();
+        record.StartAiAnalysis();
+        record.FailAiAnalysis("Attempt 1");
+        record.StartAiAnalysis();
+        record.FailAiAnalysis("Attempt 2");
+        record.StartAiAnalysis();
+
+        record.FailAiAnalysis("Attempt 3");
+
+        Assert.Equal(AiProcessingStatus.Failed, record.AiStatus);
+        Assert.Equal(3, record.AiRetryCount);
+    }
+
+    [Fact]
+    public void FailAiAnalysis_RetryCountResetsOnNewRequestAfterCompletion()
+    {
+        var record = CreateRecord();
+        record.RequestAiAnalysis();
+        record.StartAiAnalysis();
+        record.FailAiAnalysis("Fail");
+
+        Assert.Equal(1, record.AiRetryCount);
+
+        record.StartAiAnalysis();
+        record.CompleteAiAnalysis("summary", null, null);
+
+        Assert.Equal(AiProcessingStatus.Completed, record.AiStatus);
+
+        record.RequestAiAnalysis();
+        Assert.Equal(0, record.AiRetryCount);
     }
 
     [Fact]
