@@ -51,3 +51,9 @@
 | TC-047 | API | Editar registro valido | Responde 200 con el registro actualizado |
 | TC-048 | API | Editar registro inexistente | Responde 404 con ProblemDetails |
 | TC-049 | API | Editar registro invalido | Responde 400 con ValidationProblemDetails |
+| TC-050 | Aplicacion | Eliminar registro existente | Remueve el agregado y guarda cambios |
+| TC-051 | Aplicacion | Eliminar registro inexistente | Devuelve falso sin guardar |
+| TC-052 | API | Eliminar registro existente | Responde 204 y ya no aparece en detalle |
+| TC-053 | API | Eliminar registro inexistente | Responde 404 con ProblemDetails |
+| TC-054 | Frontend | Cancelar confirmacion de eliminacion | No llama al servicio de eliminacion |
+| TC-055 | Frontend | Confirmar eliminacion | Llama al servicio y refresca registros |

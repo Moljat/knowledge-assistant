@@ -31,9 +31,47 @@ h1 {
   text-align: center;
 }
 
+.record-list {
+  display: grid;
+  gap: 12px;
+}
+
+.record-row {
+  align-items: center;
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 8px;
+  display: grid;
+  gap: 16px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  padding: 16px;
+}
+
+.record-row h2 {
+  font-size: 18px;
+  margin: 0 0 8px;
+}
+
+.record-row p {
+  color: var(--mat-sys-on-surface-variant);
+  margin: 0 0 12px;
+}
+
+.metadata {
+  color: var(--mat-sys-on-surface-variant);
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 13px;
+  gap: 8px 16px;
+}
+
 @media (max-width: 600px) {
   .page-heading {
     align-items: stretch;
     flex-direction: column;
+  }
+
+  .record-row {
+    align-items: stretch;
+    grid-template-columns: 1fr;
   }
 }

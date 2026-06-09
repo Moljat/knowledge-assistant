@@ -1,17 +1,42 @@
 <section class="page-heading">
   <div>
-    <p class="eyebrow">Información empresarial</p>
+    <p class="eyebrow">Informacion empresarial</p>
     <h1>Registros</h1>
-    <p>La tabla, búsqueda y filtros se implementarán en la fase de CRUD.</p>
+    <p>Administra la base de conocimiento y elimina registros que ya no deban conservarse.</p>
   </div>
   <button mat-flat-button disabled>Nuevo registro</button>
 </section>
 
-<mat-card appearance="outlined">
-  <mat-card-content>
-    <p class="empty-state">
-      El módulo está preparado. La siguiente tarea define el modelo y sus reglas antes de
-      conectar persistencia y formularios.
-    </p>
-  </mat-card-content>
-</mat-card>
+@if (state$ | async; as state) {
+  @if (state.error) {
+    <mat-card appearance="outlined">
+      <mat-card-content>
+        <p class="empty-state">{{ state.error }}</p>
+      </mat-card-content>
+    </mat-card>
+  } @else if (state.records.length === 0) {
+    <mat-card appearance="outlined">
+      <mat-card-content>
+        <p class="empty-state">No hay registros para mostrar.</p>
+      </mat-card-content>
+    </mat-card>
+  } @else {
+    <div class="record-list" aria-label="Registros de conocimiento">
+      @for (record of state.records; track record.id) {
+        <article class="record-row">
+          <div>
+            <h2>{{ record.title }}</h2>
+            <p>{{ record.content }}</p>
+            <div class="metadata">
+              <span>{{ record.source || 'Sin fuente' }}</span>
+              <span>Actualizado {{ record.updatedAtUtc | date: 'medium' }}</span>
+            </div>
+          </div>
+          <button mat-button color="warn" type="button" (click)="confirmDelete(record)">
+            Eliminar
+          </button>
+        </article>
+      }
+    </div>
+  }
+}

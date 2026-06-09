@@ -195,6 +195,35 @@ public sealed class CreateRecordEndpointTests
         Assert.Contains("title", body.Errors.Keys);
     }
 
+    [Fact]
+    public async Task DeleteRecord_WhenRecordExists_ReturnsNoContentAndRemovesRecord()
+    {
+        using var factory = new RecordsApiFactory();
+        var client = factory.CreateClient();
+        var created = await CreateRecordAsync(client, "Registro eliminable");
+
+        var response = await client.DeleteAsync($"/api/v1/records/{created.Id}");
+        var getAfterDelete = await client.GetAsync($"/api/v1/records/{created.Id}");
+
+        Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+        Assert.Equal(HttpStatusCode.NotFound, getAfterDelete.StatusCode);
+    }
+
+    [Fact]
+    public async Task DeleteRecord_WhenRecordDoesNotExist_ReturnsProblemDetails()
+    {
+        using var factory = new RecordsApiFactory();
+        var client = factory.CreateClient();
+
+        var response = await client.DeleteAsync($"/api/v1/records/{Guid.NewGuid()}");
+
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        var body = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+
+        Assert.NotNull(body);
+        Assert.Equal((int)HttpStatusCode.NotFound, body.Status);
+    }
+
     private static async Task<KnowledgeRecordResponse> CreateRecordAsync(
         HttpClient client,
         string title)

@@ -10,7 +10,8 @@ public sealed class RecordsController(
     ICreateKnowledgeRecordHandler createHandler,
     IGetKnowledgeRecordByIdHandler getByIdHandler,
     IListKnowledgeRecordsHandler listHandler,
-    IUpdateKnowledgeRecordHandler updateHandler) : ControllerBase
+    IUpdateKnowledgeRecordHandler updateHandler,
+    IDeleteKnowledgeRecordHandler deleteHandler) : ControllerBase
 {
     [HttpGet("{id:guid}")]
     [ProducesResponseType<KnowledgeRecordResponse>(StatusCodes.Status200OK)]
@@ -130,6 +131,28 @@ public sealed class RecordsController(
                 Detail = exception.Message
             });
         }
+    }
+
+    [HttpDelete("{id:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Delete(
+        Guid id,
+        CancellationToken cancellationToken)
+    {
+        var deleted = await deleteHandler.HandleAsync(id, cancellationToken);
+
+        if (!deleted)
+        {
+            return NotFound(new ProblemDetails
+            {
+                Status = StatusCodes.Status404NotFound,
+                Title = "Knowledge record not found.",
+                Detail = $"No knowledge record exists with id '{id}'."
+            });
+        }
+
+        return NoContent();
     }
 }
 

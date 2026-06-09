@@ -96,6 +96,13 @@ responde `404 Not Found` con `ProblemDetails`. Los datos invalidos responden `40
 con `ValidationProblemDetails`. Cuando cambia el contenido, los resultados previos de IA se
 invalidan de acuerdo con las reglas del dominio.
 
+### Eliminar registro
+
+`DELETE /api/v1/records/{id}`
+
+Respuesta `204 No Content` cuando el registro existe y se elimina. Si el identificador no
+existe responde `404 Not Found` con `ProblemDetails`.
+
 ## Inteligencia Artificial
 
 - `POST /records/{id}/ai/summary`: generar resumen.
