@@ -1,8 +1,28 @@
+.app-sidenav {
+  width: 240px;
+  border-right: 1px solid var(--app-border);
+}
+
+.app-sidenav .mat-mdc-nav-list .mat-mdc-list-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.app-sidenav .mat-mdc-nav-list .mat-icon {
+  margin-right: 8px;
+}
+
 .app-toolbar {
   position: sticky;
   top: 0;
   z-index: 10;
   border-bottom: 1px solid var(--app-border);
+}
+
+.menu-btn {
+  display: none;
+  margin-right: 8px;
 }
 
 .brand {
@@ -13,6 +33,12 @@
 
 .toolbar-spacer {
   flex: 1 1 auto;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .active {
@@ -26,6 +52,14 @@
 }
 
 @media (max-width: 600px) {
+  .menu-btn {
+    display: inline-flex;
+  }
+
+  .nav-links {
+    display: none;
+  }
+
   .app-toolbar {
     padding-inline: 12px;
   }

@@ -23,4 +23,20 @@ describe('App', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('.brand')?.textContent).toContain('Knowledge Assistant');
   });
+
+  it('should have a sidenav toggle button', () => {
+    const fixture = TestBed.createComponent(App);
+    fixture.detectChanges();
+    const compiled = fixture.nativeElement as HTMLElement;
+    expect(compiled.querySelector('.menu-btn')).toBeTruthy();
+  });
+
+  it('should have desktop navigation links', () => {
+    const fixture = TestBed.createComponent(App);
+    fixture.detectChanges();
+    const compiled = fixture.nativeElement as HTMLElement;
+    const nav = compiled.querySelector('.nav-links');
+    expect(nav).toBeTruthy();
+    expect(nav?.querySelectorAll('a').length).toBe(2);
+  });
 });
