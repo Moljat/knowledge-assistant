@@ -66,3 +66,7 @@
 | TC-062 | API | Recurso no encontrado | Responde ProblemDetails con tipo not-found y traceId |
 | TC-063 | E2E API | Ciclo CRUD completo | Crea, busca, edita, consulta y elimina el registro por HTTP |
 | TC-064 | E2E IA | Analizar y persistir resumen | Completa el analisis y conserva los resultados al consultar |
+| TC-065 | Aplicacion | Chat con contexto | Limita registros, clasifica contexto y trunca contenido largo |
+| TC-066 | Aplicacion | Metricas del dashboard | Mapea conteos y valores vacios para todos los estados |
+| TC-067 | Frontend IA | Acciones de analisis | Ejecuta resumen, clasificacion, recomendaciones y errores |
+| TC-068 | Frontend IA | Chat global | Maneja respuesta, respuesta vacia, error y solicitudes bloqueadas |
