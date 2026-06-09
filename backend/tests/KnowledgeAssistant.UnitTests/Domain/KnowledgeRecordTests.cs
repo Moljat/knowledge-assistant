@@ -96,6 +96,25 @@ public sealed class KnowledgeRecordTests
     }
 
     [Fact]
+    public void Activate_WhenArchived_Throws()
+    {
+        var record = CreateRecord();
+        record.Archive();
+
+        Assert.Throws<InvalidOperationException>(() =>
+            record.Activate());
+    }
+
+    [Fact]
+    public void Restore_WhenRecordIsNotArchived_Throws()
+    {
+        var record = CreateRecord();
+
+        Assert.Throws<InvalidOperationException>(() =>
+            record.Restore());
+    }
+
+    [Fact]
     public void Update_WhenArchived_Throws()
     {
         var record = CreateRecord();
@@ -209,6 +228,25 @@ public sealed class KnowledgeRecordTests
             record.CompleteAiAnalysis(null, " ", null));
     }
 
+    [Theory]
+    [InlineData(KnowledgeRecord.MaxSummaryLength + 1, "summary")]
+    [InlineData(KnowledgeRecord.MaxCategoryLength + 1, "category")]
+    [InlineData(KnowledgeRecord.MaxRecommendationsLength + 1, "recommendations")]
+    public void CompleteAiAnalysis_WhenResultExceedsLimit_Throws(int length, string field)
+    {
+        var record = CreateRecord();
+        record.RequestAiAnalysis();
+        record.StartAiAnalysis();
+        var summary = field == "summary" ? new string('a', length) : "Resumen";
+        var category = field == "category" ? new string('a', length) : "Operaciones";
+        var recommendations = field == "recommendations"
+            ? new string('a', length)
+            : "Revisar proceso";
+
+        Assert.Throws<ArgumentException>(() =>
+            record.CompleteAiAnalysis(summary, category, recommendations));
+    }
+
     [Fact]
     public void FailAiAnalysis_FromProcessing_StoresError()
     {
@@ -221,6 +259,20 @@ public sealed class KnowledgeRecordTests
 
         Assert.Equal(AiProcessingStatus.Failed, record.AiStatus);
         Assert.Equal("Mistral timeout", record.AiError);
+        Assert.Equal(failedAt, record.AiProcessedAtUtc);
+    }
+
+    [Fact]
+    public void FailAiAnalysis_FromPending_StoresErrorWithoutStarting()
+    {
+        var record = CreateRecord();
+        var failedAt = InitialTime.AddMinutes(2);
+        record.RequestAiAnalysis(InitialTime.AddMinutes(1));
+
+        record.FailAiAnalysis("  Rate limit  ", failedAt);
+
+        Assert.Equal(AiProcessingStatus.Failed, record.AiStatus);
+        Assert.Equal("Rate limit", record.AiError);
         Assert.Equal(failedAt, record.AiProcessedAtUtc);
     }
 
