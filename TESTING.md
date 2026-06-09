@@ -38,9 +38,14 @@ npm --workspace frontend run test:ci
 - Las pruebas no dependen de una llave real de Mistral salvo la suite marcada como externa.
 - Las evidencias de entrega se guardarán en `documentation/evidence/`.
 
-## Pendiente frontend Fase 3
+## Frontend
 
-En este entorno `ng build` y `ng test` fallan por resolucion de archivos/modulos (`Cannot read directory "../../.."`, `zone.js`, `src/styles.scss`) y el `npm` global apunta a un `npm-cli.js` inexistente. Mientras se corrige, validar TypeScript con:
+`ng build` y `ng test` requieren un navegador Chromium disponible. El script
+`frontend/scripts/resolve-browser.mjs` detecta automáticamente Chrome o Edge
+y establece `CHROME_BIN`. Si no se encuentra ninguno, los tests fallarán al
+lanzar el navegador.
+
+Validación adicional de TypeScript (útil si `ng test` no puede ejecutarse):
 
 ```powershell
 cd frontend
