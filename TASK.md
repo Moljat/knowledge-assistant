@@ -41,7 +41,7 @@ Las tareas están ordenadas para producir incrementos pequeños y demostrables.
 ## Fase 4: Mistral e IA
 
 - [x] `T4.1` Configurar cliente Mistral y manejo seguro de credenciales.
-- [ ] `T4.2` Diseñar prompts reutilizables y respuestas JSON estructuradas.
+- [x] `T4.2` Diseñar prompts reutilizables y respuestas JSON estructuradas.
 - [ ] `T4.3` Implementar resumen inteligente.
 - [ ] `T4.4` Implementar clasificación automática.
 - [ ] `T4.5` Implementar recomendaciones.

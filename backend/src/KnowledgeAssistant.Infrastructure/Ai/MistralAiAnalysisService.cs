@@ -67,28 +67,8 @@ public sealed class MistralAiAnalysisService : IAiAnalysisService
         return ParseResult(content, request.Type);
     }
 
-    private static string BuildSystemPrompt(AiAnalysisType type) => type switch
-    {
-        AiAnalysisType.Summary =>
-            "You are a business analyst. Summarize the following content in Spanish. "
-            + "Respond with JSON: {\"summary\": \"...\"}. Max 4000 characters.",
-
-        AiAnalysisType.Classification =>
-            "You are a document classifier. Classify the content into exactly one category "
-            + "from: Estrategia, Operaciones, Finanzas, Recursos Humanos, Legal, Tecnologia, Mercadeo, Ventas, Clientes, Proveedores. "
-            + "Respond with JSON: {\"category\": \"...\"}. Max 100 characters.",
-
-        AiAnalysisType.Recommendations =>
-            "You are a business consultant. Based on the content, suggest actionable recommendations in Spanish. "
-            + "Respond with JSON: {\"recommendations\": [\"...\", \"...\"]}. Max 5 recommendations, 8000 characters total.",
-
-        AiAnalysisType.Question =>
-            "You are a knowledge assistant. Answer the question based strictly on the provided context. "
-            + "If the context does not contain the answer, say so. Respond in Spanish. "
-            + "Respond with JSON: {\"answer\": \"...\"}. Max 2000 characters.",
-
-        _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
-    };
+    private static string BuildSystemPrompt(AiAnalysisType type) =>
+        AiPrompts.BuildSystemPrompt(type);
 
     private static AiAnalysisResult ParseResult(string content, AiAnalysisType type)
     {
