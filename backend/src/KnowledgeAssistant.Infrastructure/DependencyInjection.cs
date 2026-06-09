@@ -42,7 +42,21 @@ public static class DependencyInjection
 
         services
             .AddOptions<MistralOptions>()
-            .Bind(configuration.GetSection(MistralOptions.SectionName));
+            .Bind(configuration.GetSection(MistralOptions.SectionName))
+            .Validate(
+                options => Uri.TryCreate(
+                    options.BaseUrl,
+                    UriKind.Absolute,
+                    out var uri)
+                    && uri.Scheme == Uri.UriSchemeHttps,
+                "Mistral:BaseUrl must be an absolute HTTPS URL.")
+            .Validate(
+                options => !string.IsNullOrWhiteSpace(options.Model),
+                "Mistral:Model is required.")
+            .Validate(
+                options => options.TimeoutSeconds is >= 1 and <= 120,
+                "Mistral:TimeoutSeconds must be between 1 and 120.")
+            .ValidateOnStart();
 
         services.AddTransient<MistralResilienceHandler>();
         services.AddHostedService<AiProcessingBackgroundService>();

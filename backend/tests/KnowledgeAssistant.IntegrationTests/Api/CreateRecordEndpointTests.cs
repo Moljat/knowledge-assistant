@@ -84,6 +84,46 @@ public sealed class CreateRecordEndpointTests
         Assert.NotNull(persisted.AiProcessedAtUtc);
     }
 
+    [Theory]
+    [InlineData("")]
+    [InlineData("   ")]
+    public async Task Chat_WithBlankQuestion_ReturnsValidationProblem(string question)
+    {
+        using var factory = new RecordsApiFactory();
+        var client = factory.CreateClient();
+
+        var response = await client.PostAsJsonAsync(
+            "/api/v1/ai/chat",
+            new ChatRequest(question));
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal(
+            "application/problem+json",
+            response.Content.Headers.ContentType?.MediaType);
+        var problem = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
+        Assert.NotNull(problem);
+        Assert.Equal("/problems/validation-error", problem.Type);
+        Assert.Contains("Question", problem.Errors.Keys);
+        Assert.True(problem.Extensions.ContainsKey("traceId"));
+    }
+
+    [Fact]
+    public async Task RecordQuestion_WhenQuestionExceedsLimit_ReturnsValidationProblem()
+    {
+        using var factory = new RecordsApiFactory();
+        var client = factory.CreateClient();
+        var created = await CreateRecordAsync(client, "Registro con pregunta invalida");
+
+        var response = await client.PostAsJsonAsync(
+            $"/api/v1/records/{created.Id}/ai/questions",
+            new AiQuestionRequest(new string('x', AiInputValidator.MaxQuestionLength + 1)));
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        var problem = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
+        Assert.NotNull(problem);
+        Assert.Contains("Question", problem.Errors.Keys);
+    }
+
     [Fact]
     public async Task GetRecord_WhenRecordExists_ReturnsDetail()
     {

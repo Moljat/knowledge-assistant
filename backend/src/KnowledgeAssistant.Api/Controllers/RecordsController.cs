@@ -241,6 +241,14 @@ public sealed class RecordsController(
 
             return Ok(KnowledgeRecordResponse.FromResult(record));
         }
+        catch (ArgumentException exception)
+        {
+            logger.LogWarning(
+                exception,
+                "Rejected analysis for record {RecordId} because the input is invalid.",
+                id);
+            return CreateValidationProblem(exception, "question");
+        }
         catch (InvalidOperationException exception)
         {
             logger.LogWarning(
