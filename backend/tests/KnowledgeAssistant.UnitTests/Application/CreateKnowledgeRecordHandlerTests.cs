@@ -75,6 +75,14 @@ public sealed class CreateKnowledgeRecordHandlerTests
             return Task.FromResult(false);
         }
 
+        public Task<PagedKnowledgeRecordResult> ListAsync(
+            int page,
+            int pageSize,
+            CancellationToken cancellationToken = default)
+        {
+            return Task.FromResult(new PagedKnowledgeRecordResult([], page, pageSize, 0));
+        }
+
         public void Add(KnowledgeRecord record)
         {
             AddedRecord = record;

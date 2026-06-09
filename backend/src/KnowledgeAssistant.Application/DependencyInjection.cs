@@ -8,6 +8,8 @@ public static class DependencyInjection
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
         services.AddScoped<ICreateKnowledgeRecordHandler, CreateKnowledgeRecordHandler>();
+        services.AddScoped<IGetKnowledgeRecordByIdHandler, GetKnowledgeRecordByIdHandler>();
+        services.AddScoped<IListKnowledgeRecordsHandler, ListKnowledgeRecordsHandler>();
 
         return services;
     }

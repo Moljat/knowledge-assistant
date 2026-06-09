@@ -36,3 +36,11 @@
 | TC-032 | Aplicacion | Crear registro invalido | No persiste cambios |
 | TC-033 | API | Crear registro valido | Responde 201 Created con ubicacion y cuerpo |
 | TC-034 | API | Crear registro invalido | Responde 400 con ValidationProblemDetails |
+| TC-035 | Aplicacion | Consultar registro existente | Devuelve el detalle del agregado |
+| TC-036 | Aplicacion | Consultar registro inexistente | Devuelve resultado nulo |
+| TC-037 | Aplicacion | Listar registros paginados | Devuelve items y metadatos de paginacion |
+| TC-038 | Aplicacion | Paginacion invalida | Se rechaza por validacion |
+| TC-039 | API | Consultar detalle existente | Responde 200 con el registro |
+| TC-040 | API | Consultar detalle inexistente | Responde 404 con ProblemDetails |
+| TC-041 | API | Listar registros paginados | Responde 200 con items y totales |
+| TC-042 | API | Listar con paginacion invalida | Responde 400 con ValidationProblemDetails |
