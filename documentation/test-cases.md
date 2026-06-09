@@ -62,3 +62,5 @@
 | TC-058 | API | Buscar registros | Devuelve solo coincidencias por texto |
 | TC-059 | API | Filtrar por estado y tipo | Devuelve solo registros coincidentes |
 | TC-060 | Frontend | Listar con filtros | Serializa filtros como query params |
+| TC-061 | API | Error de validacion | Responde application/problem+json con tipo y traceId |
+| TC-062 | API | Recurso no encontrado | Responde ProblemDetails con tipo not-found y traceId |

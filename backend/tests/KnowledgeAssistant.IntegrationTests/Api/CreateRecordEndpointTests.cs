@@ -43,6 +43,8 @@ public sealed class CreateRecordEndpointTests
 
         Assert.NotNull(body);
         Assert.Equal((int)HttpStatusCode.NotFound, body.Status);
+        Assert.Equal("/problems/not-found", body.Type);
+        Assert.True(body.Extensions.ContainsKey("traceId"));
     }
 
     [Fact]
@@ -112,9 +114,14 @@ public sealed class CreateRecordEndpointTests
         var response = await client.GetAsync("/api/v1/records?page=0&pageSize=20");
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal(
+            "application/problem+json",
+            response.Content.Headers.ContentType?.MediaType);
         var body = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
 
         Assert.NotNull(body);
+        Assert.Equal("/problems/validation-error", body.Type);
+        Assert.True(body.Extensions.ContainsKey("traceId"));
         Assert.Contains("page", body.Errors.Keys);
     }
 
@@ -159,9 +166,14 @@ public sealed class CreateRecordEndpointTests
         var response = await client.PostAsJsonAsync("/api/v1/records", request);
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal(
+            "application/problem+json",
+            response.Content.Headers.ContentType?.MediaType);
         var body = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
 
         Assert.NotNull(body);
+        Assert.Equal("/problems/validation-error", body.Type);
+        Assert.True(body.Extensions.ContainsKey("traceId"));
         Assert.Contains("title", body.Errors.Keys);
     }
 
@@ -208,6 +220,8 @@ public sealed class CreateRecordEndpointTests
 
         Assert.NotNull(body);
         Assert.Equal((int)HttpStatusCode.NotFound, body.Status);
+        Assert.Equal("/problems/not-found", body.Type);
+        Assert.True(body.Extensions.ContainsKey("traceId"));
     }
 
     [Fact]
@@ -258,6 +272,8 @@ public sealed class CreateRecordEndpointTests
 
         Assert.NotNull(body);
         Assert.Equal((int)HttpStatusCode.NotFound, body.Status);
+        Assert.Equal("/problems/not-found", body.Type);
+        Assert.True(body.Extensions.ContainsKey("traceId"));
     }
 
     private static async Task<KnowledgeRecordResponse> CreateRecordAsync(

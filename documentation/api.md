@@ -118,3 +118,12 @@ existe responde `404 Not Found` con `ProblemDetails`.
 
 Las respuestas de error usarán `application/problem+json`. El contrato final se publicará
 mediante OpenAPI y se actualizará junto con cada caso de uso.
+
+## Errores estandarizados
+
+Las respuestas de error usan `application/problem+json` e incluyen `traceId` para correlacion operativa. Tipos estandarizados:
+
+- `/problems/validation-error`: parametros, filtros o payloads invalidos.
+- `/problems/not-found`: recursos inexistentes.
+- `/problems/business-rule-violation`: reglas de dominio que impiden la operacion.
+- `/problems/internal-server-error`: errores no controlados.
