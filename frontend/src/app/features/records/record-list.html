@@ -2,41 +2,100 @@
   <div>
     <p class="eyebrow">Informacion empresarial</p>
     <h1>Registros</h1>
-    <p>Administra la base de conocimiento y elimina registros que ya no deban conservarse.</p>
   </div>
   <button mat-flat-button disabled>Nuevo registro</button>
 </section>
 
+<section class="filters" aria-label="Filtros">
+  <mat-form-field appearance="outline" subscriptSizing="dynamic">
+    <mat-label>Buscar</mat-label>
+    <input matInput [formControl]="searchControl" placeholder="Título, contenido, fuente…" />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" subscriptSizing="dynamic">
+    <mat-label>Estado</mat-label>
+    <mat-select [formControl]="statusControl">
+      <mat-option [value]="null">Todos</mat-option>
+      @for (opt of statusOptions; track opt.value) {
+        <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" subscriptSizing="dynamic">
+    <mat-label>Tipo</mat-label>
+    <mat-select [formControl]="typeControl">
+      <mat-option [value]="null">Todos</mat-option>
+      @for (opt of typeOptions; track opt.value) {
+        <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" subscriptSizing="dynamic">
+    <mat-label>IA</mat-label>
+    <mat-select [formControl]="aiStatusControl">
+      <mat-option [value]="null">Todos</mat-option>
+      @for (opt of aiStatusOptions; track opt.value) {
+        <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+</section>
+
 @if (state$ | async; as state) {
   @if (state.error) {
-    <mat-card appearance="outlined">
-      <mat-card-content>
-        <p class="empty-state">{{ state.error }}</p>
-      </mat-card-content>
-    </mat-card>
+    <p class="empty-state">{{ state.error }}</p>
   } @else if (state.records.length === 0) {
-    <mat-card appearance="outlined">
-      <mat-card-content>
-        <p class="empty-state">No hay registros para mostrar.</p>
-      </mat-card-content>
-    </mat-card>
+    <p class="empty-state">No hay registros para mostrar.</p>
   } @else {
-    <div class="record-list" aria-label="Registros de conocimiento">
-      @for (record of state.records; track record.id) {
-        <article class="record-row">
-          <div>
-            <h2>{{ record.title }}</h2>
-            <p>{{ record.content }}</p>
-            <div class="metadata">
-              <span>{{ record.source || 'Sin fuente' }}</span>
-              <span>Actualizado {{ record.updatedAtUtc | date: 'medium' }}</span>
-            </div>
-          </div>
-          <button mat-button color="warn" type="button" (click)="confirmDelete(record)">
-            Eliminar
-          </button>
-        </article>
-      }
+    <div class="table-container">
+      <table mat-table [dataSource]="state.records" class="records-table">
+        <ng-container matColumnDef="title">
+          <th mat-header-cell *matHeaderCellDef>Título</th>
+          <td mat-cell *matCellDef="let record">
+            <div class="cell-title">{{ record.title }}</div>
+            <div class="cell-content">{{ record.content }}</div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef>Estado</th>
+          <td mat-cell *matCellDef="let record">{{ statusLabel(record.status) }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="type">
+          <th mat-header-cell *matHeaderCellDef>Tipo</th>
+          <td mat-cell *matCellDef="let record">{{ typeLabel(record.type) }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="updatedAt">
+          <th mat-header-cell *matHeaderCellDef>Actualizado</th>
+          <td mat-cell *matCellDef="let record">{{ record.updatedAtUtc | date: 'short' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let record">
+            <button mat-button color="warn" type="button" (click)="confirmDelete(record)">
+              Eliminar
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
     </div>
+
+    <mat-paginator
+      [length]="state.totalItems"
+      [pageIndex]="state.page - 1"
+      [pageSize]="state.pageSize"
+      [pageSizeOptions]="[5, 10, 25, 50]"
+      (page)="onPage($event)"
+      aria-label="Paginar registros"
+    >
+    </mat-paginator>
   }
 }
