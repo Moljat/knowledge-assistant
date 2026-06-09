@@ -20,3 +20,14 @@
 - Preguntas y respuestas.
 
 Las capturas y evidencias se agregarán cuando cada flujo sea funcional.
+
+## Datos de demostración
+
+Cuando `SeedData:Enabled=true`, la aplicación crea tres registros empresariales:
+
+- Política de atención a clientes.
+- Notas de reunión comercial.
+- Registro de mejora operativa.
+
+Las semillas no incluyen respuestas de IA. El enriquecimiento deberá generarse mediante la
+integración real con Mistral.

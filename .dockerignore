@@ -1,0 +1,12 @@
+.git
+.dotnet
+.nuget
+.npm-cache
+.env
+**/bin
+**/obj
+**/node_modules
+**/dist
+**/coverage
+**/TestResults
+*.log

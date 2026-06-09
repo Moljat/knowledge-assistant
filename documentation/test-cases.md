@@ -23,3 +23,6 @@
 | TC-019 | Repositorio | Agregar y consultar registro | Persiste y devuelve una entidad sin tracking |
 | TC-020 | Repositorio | Consultar para actualización | Mantiene tracking y guarda los cambios |
 | TC-021 | Repositorio | Eliminar registro | La unidad de trabajo confirma la eliminación |
+| TC-022 | Semillas | Primera ejecución | Inserta tres registros demo sin resultados de IA |
+| TC-023 | Semillas | Segunda ejecución | No crea registros duplicados |
+| TC-024 | Inicialización | Funcionalidad desactivada | No migra ni inserta datos automáticamente |

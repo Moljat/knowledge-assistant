@@ -59,3 +59,16 @@ dotnet test backend/tests/KnowledgeAssistant.IntegrationTests
 ```
 
 Sin la variable, las pruebas físicas se omiten. Cada caso usa una transacción que se revierte.
+
+## Inicialización y semillas
+
+La inicialización automática está desactivada por defecto:
+
+```text
+DatabaseInitialization__Enabled=false
+SeedData__Enabled=false
+```
+
+Docker Compose activa ambas variables. Al iniciar la API, primero aplica migraciones pendientes
+y después inserta tres registros demo. El proceso de semillas es idempotente y no duplica
+registros ya existentes con la fuente técnica `Knowledge Assistant Demo Seed v1`.
