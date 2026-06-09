@@ -57,3 +57,8 @@
 | TC-053 | API | Eliminar registro inexistente | Responde 404 con ProblemDetails |
 | TC-054 | Frontend | Cancelar confirmacion de eliminacion | No llama al servicio de eliminacion |
 | TC-055 | Frontend | Confirmar eliminacion | Llama al servicio y refresca registros |
+| TC-056 | Aplicacion | Listar con filtros dinamicos | Normaliza filtros y los pasa al repositorio |
+| TC-057 | Aplicacion | Filtro de texto demasiado largo | Responde con validacion |
+| TC-058 | API | Buscar registros | Devuelve solo coincidencias por texto |
+| TC-059 | API | Filtrar por estado y tipo | Devuelve solo registros coincidentes |
+| TC-060 | Frontend | Listar con filtros | Serializa filtros como query params |

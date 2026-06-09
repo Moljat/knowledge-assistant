@@ -18,7 +18,14 @@ public sealed class ListKnowledgeRecordsHandlerTests
             new StubRepository(records, totalItems: 7));
 
         var result = await handler.HandleAsync(
-            new ListKnowledgeRecordsQuery(Page: 2, PageSize: 2));
+            new ListKnowledgeRecordsQuery(
+                Page: 2,
+                PageSize: 2,
+                Search: null,
+                Category: null,
+                Status: null,
+                Type: null,
+                AiStatus: null));
 
         Assert.Equal(2, result.Page);
         Assert.Equal(2, result.PageSize);
@@ -28,6 +35,29 @@ public sealed class ListKnowledgeRecordsHandlerTests
             result.Items,
             item => Assert.Equal("Uno", item.Title),
             item => Assert.Equal("Dos", item.Title));
+    }
+
+    [Fact]
+    public async Task HandleAsync_WithFilters_NormalizesAndPassesFiltersToRepository()
+    {
+        var repository = new StubRepository([], totalItems: 0);
+        var handler = new ListKnowledgeRecordsHandler(repository);
+
+        await handler.HandleAsync(new ListKnowledgeRecordsQuery(
+            Page: 1,
+            PageSize: 20,
+            Search: "  ventas  ",
+            Category: "  Operaciones  ",
+            Status: KnowledgeRecordStatus.Active,
+            Type: KnowledgeRecordType.Document,
+            AiStatus: AiProcessingStatus.Completed));
+
+        Assert.NotNull(repository.LastFilters);
+        Assert.Equal("ventas", repository.LastFilters.Search);
+        Assert.Equal("Operaciones", repository.LastFilters.Category);
+        Assert.Equal(KnowledgeRecordStatus.Active, repository.LastFilters.Status);
+        Assert.Equal(KnowledgeRecordType.Document, repository.LastFilters.Type);
+        Assert.Equal(AiProcessingStatus.Completed, repository.LastFilters.AiStatus);
     }
 
     [Theory]
@@ -43,15 +73,49 @@ public sealed class ListKnowledgeRecordsHandlerTests
             new StubRepository([], totalItems: 0));
 
         var exception = await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
-            handler.HandleAsync(new ListKnowledgeRecordsQuery(page, pageSize)));
+            handler.HandleAsync(new ListKnowledgeRecordsQuery(
+                page,
+                pageSize,
+                Search: null,
+                Category: null,
+                Status: null,
+                Type: null,
+                AiStatus: null)));
 
         Assert.Equal(parameterName, exception.ParamName);
+    }
+
+    [Theory]
+    [InlineData(ListKnowledgeRecordsHandler.MaxSearchLength + 1, "Search")]
+    [InlineData(KnowledgeRecord.MaxCategoryLength + 1, "Category")]
+    public async Task HandleAsync_WhenTextFilterExceedsLimit_Throws(
+        int length,
+        string field)
+    {
+        var handler = new ListKnowledgeRecordsHandler(
+            new StubRepository([], totalItems: 0));
+        var search = field == "Search" ? new string('a', length) : null;
+        var category = field == "Category" ? new string('a', length) : null;
+
+        var exception = await Assert.ThrowsAsync<ArgumentException>(() =>
+            handler.HandleAsync(new ListKnowledgeRecordsQuery(
+                Page: 1,
+                PageSize: 20,
+                Search: search,
+                Category: category,
+                Status: null,
+                Type: null,
+                AiStatus: null)));
+
+        Assert.Equal(field, exception.ParamName);
     }
 
     private sealed class StubRepository(
         IReadOnlyList<KnowledgeRecord> records,
         int totalItems) : IKnowledgeRecordRepository
     {
+        public KnowledgeRecordListFilters? LastFilters { get; private set; }
+
         public Task<KnowledgeRecord?> GetByIdAsync(
             Guid id,
             CancellationToken cancellationToken = default)
@@ -74,10 +138,12 @@ public sealed class ListKnowledgeRecordsHandlerTests
         }
 
         public Task<PagedKnowledgeRecordResult> ListAsync(
+            KnowledgeRecordListFilters filters,
             int page,
             int pageSize,
             CancellationToken cancellationToken = default)
         {
+            LastFilters = filters;
             return Task.FromResult(new PagedKnowledgeRecordResult(
                 records,
                 page,

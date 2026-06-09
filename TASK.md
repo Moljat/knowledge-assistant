@@ -23,7 +23,7 @@ Las tareas están ordenadas para producir incrementos pequeños y demostrables.
 - [x] `T2.2` Consultar detalle y listado paginado.
 - [x] `T2.3` Editar registro preservando integridad.
 - [x] `T2.4` Eliminar con confirmación desde el frontend.
-- [ ] `T2.5` Buscar y aplicar filtros dinámicos.
+- [x] `T2.5` Buscar y aplicar filtros dinámicos.
 - [ ] `T2.6` Estandarizar errores, logging y códigos HTTP.
 
 ## Fase 3: Frontend de gestión

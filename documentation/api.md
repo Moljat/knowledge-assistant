@@ -58,9 +58,15 @@ identificador no existe responde `404 Not Found` con `ProblemDetails`.
 
 ### Listar registros
 
-`GET /api/v1/records?page=1&pageSize=20`
+`GET /api/v1/records?page=1&pageSize=20&search=credito&category=Operaciones&status=2&type=1&aiStatus=3`
 
-`page` inicia en `1`. `pageSize` acepta valores de `1` a `100`.
+`page` inicia en `1`. `pageSize` acepta valores de `1` a `100`. Los filtros son opcionales:
+
+- `search`: busca en titulo, contenido, fuente y categoria.
+- `category`: filtra por categoria exacta.
+- `status`: filtra por estado del registro.
+- `type`: filtra por tipo de registro.
+- `aiStatus`: filtra por estado del analisis de IA.
 
 Respuesta `200 OK`:
 

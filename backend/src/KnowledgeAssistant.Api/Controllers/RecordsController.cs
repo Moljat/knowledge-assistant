@@ -41,12 +41,24 @@ public sealed class RecordsController(
     public async Task<ActionResult<PagedKnowledgeRecordResponse>> List(
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 20,
+        [FromQuery] string? search = null,
+        [FromQuery] string? category = null,
+        [FromQuery] KnowledgeRecordStatus? status = null,
+        [FromQuery] KnowledgeRecordType? type = null,
+        [FromQuery] AiProcessingStatus? aiStatus = null,
         CancellationToken cancellationToken = default)
     {
         try
         {
             var records = await listHandler.HandleAsync(
-                new ListKnowledgeRecordsQuery(page, pageSize),
+                new ListKnowledgeRecordsQuery(
+                    page,
+                    pageSize,
+                    search,
+                    category,
+                    status,
+                    type,
+                    aiStatus),
                 cancellationToken);
 
             return Ok(PagedKnowledgeRecordResponse.FromResult(records));
@@ -54,6 +66,11 @@ public sealed class RecordsController(
         catch (ArgumentOutOfRangeException exception)
         {
             ModelState.AddModelError(exception.ParamName ?? "pagination", exception.Message);
+            return ValidationProblem(ModelState);
+        }
+        catch (ArgumentException exception)
+        {
+            ModelState.AddModelError(exception.ParamName ?? "filters", exception.Message);
             return ValidationProblem(ModelState);
         }
     }

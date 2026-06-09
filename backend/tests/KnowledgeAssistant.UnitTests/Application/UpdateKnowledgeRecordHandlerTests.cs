@@ -126,6 +126,7 @@ public sealed class UpdateKnowledgeRecordHandlerTests
         }
 
         public Task<PagedKnowledgeRecordResult> ListAsync(
+            KnowledgeRecordListFilters filters,
             int page,
             int pageSize,
             CancellationToken cancellationToken = default)
