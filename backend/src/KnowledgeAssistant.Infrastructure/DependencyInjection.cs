@@ -17,7 +17,10 @@ public static class DependencyInjection
                 "Connection string 'DefaultConnection' is not configured.");
 
         services.AddDbContext<KnowledgeAssistantDbContext>(options =>
-            options.UseSqlServer(connectionString));
+            options.UseSqlServer(
+                connectionString,
+                sqlServer => sqlServer.MigrationsAssembly(
+                    typeof(KnowledgeAssistantDbContext).Assembly.FullName)));
 
         services
             .AddOptions<MistralOptions>()

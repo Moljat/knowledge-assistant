@@ -37,9 +37,10 @@ Consulta [documentation/architecture.md](documentation/architecture.md) para el 
 
 1. Copia `.env.example` como `.env` y configura `SQL_SA_PASSWORD`.
 2. Agrega `MISTRAL_API_KEY` cuando iniciemos la integración de IA.
-3. Instala dependencias con `npm install`.
-4. Ejecuta el backend con `npm run start:backend`.
-5. Ejecuta el frontend con `npm run start:frontend`.
+3. Restaura herramientas .NET con `dotnet tool restore`.
+4. Instala dependencias con `npm install`.
+5. Ejecuta el backend con `npm run start:backend`.
+6. Ejecuta el frontend con `npm run start:frontend`.
 
 Para levantar la solución completa:
 

@@ -23,11 +23,28 @@ npm --workspace frontend start
 
 ## Migraciones
 
-Las migraciones vivirán en `KnowledgeAssistant.Infrastructure/Migrations`.
+Las migraciones viven en
+`backend/src/KnowledgeAssistant.Infrastructure/Persistence/Migrations`.
+
+La versión de `dotnet-ef` está fijada en `.config/dotnet-tools.json`. Después de clonar:
 
 ```powershell
-dotnet ef migrations add InitialCreate --project backend/src/KnowledgeAssistant.Infrastructure --startup-project backend/src/KnowledgeAssistant.Api
-dotnet ef database update --project backend/src/KnowledgeAssistant.Infrastructure --startup-project backend/src/KnowledgeAssistant.Api
+dotnet tool restore
+dotnet ef database update --project backend/src/KnowledgeAssistant.Infrastructure
 ```
 
-Estos comandos se habilitarán en la fase de persistencia.
+Para crear una migración posterior:
+
+```powershell
+dotnet ef migrations add MigrationName --project backend/src/KnowledgeAssistant.Infrastructure --output-dir Persistence/Migrations
+```
+
+Para regenerar el script SQL idempotente:
+
+```powershell
+dotnet ef migrations script --idempotent --project backend/src/KnowledgeAssistant.Infrastructure --output backend/database/initial-schema.sql
+```
+
+La fábrica de diseño usa `ConnectionStrings__DefaultConnection` cuando está definida y
+LocalDB como alternativa para generar migraciones. También acepta
+`-- --connection=<connection-string>`.

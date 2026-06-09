@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\KnowledgeAssistant.Api\KnowledgeAssistant.Api.csproj" />
+    <ProjectReference Include="..\..\src\KnowledgeAssistant.Infrastructure\KnowledgeAssistant.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
