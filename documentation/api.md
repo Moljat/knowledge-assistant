@@ -76,6 +76,26 @@ Respuesta `200 OK`:
 
 La paginacion invalida responde `400 Bad Request` con `ValidationProblemDetails`.
 
+### Editar registro
+
+`PUT /api/v1/records/{id}`
+
+Solicitud:
+
+```json
+{
+  "title": "Politica de credito actualizada",
+  "content": "Registrar aprobaciones, excepciones y responsables.",
+  "source": "Manual interno",
+  "type": 1
+}
+```
+
+Respuesta `200 OK`: usa el contrato `KnowledgeRecordResponse`. Si el registro no existe
+responde `404 Not Found` con `ProblemDetails`. Los datos invalidos responden `400 Bad Request`
+con `ValidationProblemDetails`. Cuando cambia el contenido, los resultados previos de IA se
+invalidan de acuerdo con las reglas del dominio.
+
 ## Inteligencia Artificial
 
 - `POST /records/{id}/ai/summary`: generar resumen.

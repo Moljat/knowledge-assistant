@@ -10,6 +10,7 @@ public static class DependencyInjection
         services.AddScoped<ICreateKnowledgeRecordHandler, CreateKnowledgeRecordHandler>();
         services.AddScoped<IGetKnowledgeRecordByIdHandler, GetKnowledgeRecordByIdHandler>();
         services.AddScoped<IListKnowledgeRecordsHandler, ListKnowledgeRecordsHandler>();
+        services.AddScoped<IUpdateKnowledgeRecordHandler, UpdateKnowledgeRecordHandler>();
 
         return services;
     }

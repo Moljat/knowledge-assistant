@@ -129,6 +129,72 @@ public sealed class CreateRecordEndpointTests
         Assert.Contains("title", body.Errors.Keys);
     }
 
+    [Fact]
+    public async Task PutRecord_WithValidPayload_ReturnsUpdatedRecord()
+    {
+        using var factory = new RecordsApiFactory();
+        var client = factory.CreateClient();
+        var created = await CreateRecordAsync(client, "Registro editable");
+        var request = new UpdateKnowledgeRecordRequest(
+            "  Registro actualizado  ",
+            "  Contenido actualizado  ",
+            "  ERP  ",
+            KnowledgeRecordType.BusinessRecord);
+
+        var response = await client.PutAsJsonAsync($"/api/v1/records/{created.Id}", request);
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        var body = await response.Content.ReadFromJsonAsync<KnowledgeRecordResponse>();
+
+        Assert.NotNull(body);
+        Assert.Equal(created.Id, body.Id);
+        Assert.Equal("Registro actualizado", body.Title);
+        Assert.Equal("Contenido actualizado", body.Content);
+        Assert.Equal("ERP", body.Source);
+        Assert.Equal(KnowledgeRecordType.BusinessRecord, body.Type);
+    }
+
+    [Fact]
+    public async Task PutRecord_WhenRecordDoesNotExist_ReturnsProblemDetails()
+    {
+        using var factory = new RecordsApiFactory();
+        var client = factory.CreateClient();
+        var request = new UpdateKnowledgeRecordRequest(
+            "Registro",
+            "Contenido",
+            null,
+            KnowledgeRecordType.Note);
+
+        var response = await client.PutAsJsonAsync($"/api/v1/records/{Guid.NewGuid()}", request);
+
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        var body = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+
+        Assert.NotNull(body);
+        Assert.Equal((int)HttpStatusCode.NotFound, body.Status);
+    }
+
+    [Fact]
+    public async Task PutRecord_WithInvalidPayload_ReturnsValidationProblem()
+    {
+        using var factory = new RecordsApiFactory();
+        var client = factory.CreateClient();
+        var created = await CreateRecordAsync(client, "Registro invalido");
+        var request = new UpdateKnowledgeRecordRequest(
+            " ",
+            "Contenido",
+            null,
+            KnowledgeRecordType.Note);
+
+        var response = await client.PutAsJsonAsync($"/api/v1/records/{created.Id}", request);
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        var body = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
+
+        Assert.NotNull(body);
+        Assert.Contains("title", body.Errors.Keys);
+    }
+
     private static async Task<KnowledgeRecordResponse> CreateRecordAsync(
         HttpClient client,
         string title)
