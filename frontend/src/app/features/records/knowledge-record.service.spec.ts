@@ -21,12 +21,14 @@ describe('KnowledgeRecordService', () => {
   });
 
   it('should request a paginated record list', () => {
-    service.list(2, 10).subscribe((response) => {
+    service.list(2, 10, { search: 'ventas', status: 2 }).subscribe((response) => {
       expect(response.page).toBe(2);
       expect(response.pageSize).toBe(10);
     });
 
-    const request = http.expectOne('/api/v1/records?page=2&pageSize=10');
+    const request = http.expectOne(
+      '/api/v1/records?page=2&pageSize=10&search=ventas&status=2'
+    );
     expect(request.request.method).toBe('GET');
     request.flush({ items: [], page: 2, pageSize: 10, totalItems: 0, totalPages: 0 });
   });

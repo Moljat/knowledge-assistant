@@ -68,6 +68,42 @@ public sealed class CreateRecordEndpointTests
     }
 
     [Fact]
+    public async Task ListRecords_WithSearch_ReturnsMatchingRecords()
+    {
+        using var factory = new RecordsApiFactory();
+        var client = factory.CreateClient();
+        await CreateRecordAsync(client, "Politica comercial");
+        await CreateRecordAsync(client, "Manual operativo");
+
+        var response = await client.GetAsync("/api/v1/records?search=comercial");
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        var body = await response.Content.ReadFromJsonAsync<PagedKnowledgeRecordResponse>();
+
+        Assert.NotNull(body);
+        Assert.Single(body.Items);
+        Assert.Equal("Politica comercial", body.Items[0].Title);
+    }
+
+    [Fact]
+    public async Task ListRecords_WithStatusAndTypeFilters_ReturnsMatchingRecords()
+    {
+        using var factory = new RecordsApiFactory();
+        var client = factory.CreateClient();
+        await CreateRecordAsync(client, "Nota", KnowledgeRecordType.Note);
+        await CreateRecordAsync(client, "Documento", KnowledgeRecordType.Document);
+
+        var response = await client.GetAsync("/api/v1/records?status=Draft&type=Document");
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        var body = await response.Content.ReadFromJsonAsync<PagedKnowledgeRecordResponse>();
+
+        Assert.NotNull(body);
+        Assert.Single(body.Items);
+        Assert.Equal(KnowledgeRecordType.Document, body.Items[0].Type);
+    }
+
+    [Fact]
     public async Task ListRecords_WithInvalidPagination_ReturnsValidationProblem()
     {
         using var factory = new RecordsApiFactory();
@@ -226,7 +262,8 @@ public sealed class CreateRecordEndpointTests
 
     private static async Task<KnowledgeRecordResponse> CreateRecordAsync(
         HttpClient client,
-        string title)
+        string title,
+        KnowledgeRecordType type = KnowledgeRecordType.Note)
     {
         var response = await client.PostAsJsonAsync(
             "/api/v1/records",
@@ -234,7 +271,7 @@ public sealed class CreateRecordEndpointTests
                 title,
                 "Contenido",
                 "Pruebas",
-                KnowledgeRecordType.Note));
+                type));
         response.EnsureSuccessStatusCode();
 
         var body = await response.Content.ReadFromJsonAsync<KnowledgeRecordResponse>();
@@ -284,11 +321,13 @@ public sealed class CreateRecordEndpointTests
         }
 
         public Task<PagedKnowledgeRecordResult> ListAsync(
+            KnowledgeRecordListFilters filters,
             int page,
             int pageSize,
             CancellationToken cancellationToken = default)
         {
-            var orderedRecords = _records.Values
+            var filteredRecords = ApplyFilters(_records.Values, filters).ToList();
+            var orderedRecords = filteredRecords
                 .OrderByDescending(record => record.CreatedAtUtc)
                 .ThenBy(record => record.Title)
                 .Skip((page - 1) * pageSize)
@@ -299,7 +338,7 @@ public sealed class CreateRecordEndpointTests
                 orderedRecords,
                 page,
                 pageSize,
-                _records.Count));
+                filteredRecords.Count));
         }
 
         public void Add(KnowledgeRecord record)
@@ -310,6 +349,46 @@ public sealed class CreateRecordEndpointTests
         public void Remove(KnowledgeRecord record)
         {
             _records.Remove(record.Id);
+        }
+
+        private static IEnumerable<KnowledgeRecord> ApplyFilters(
+            IEnumerable<KnowledgeRecord> query,
+            KnowledgeRecordListFilters filters)
+        {
+            if (filters.Search is not null)
+            {
+                query = query.Where(record =>
+                    record.Title.Contains(filters.Search, StringComparison.OrdinalIgnoreCase)
+                    || record.Content.Contains(filters.Search, StringComparison.OrdinalIgnoreCase)
+                    || (record.Source?.Contains(
+                        filters.Search,
+                        StringComparison.OrdinalIgnoreCase) ?? false)
+                    || (record.Category?.Contains(
+                        filters.Search,
+                        StringComparison.OrdinalIgnoreCase) ?? false));
+            }
+
+            if (filters.Category is not null)
+            {
+                query = query.Where(record => record.Category == filters.Category);
+            }
+
+            if (filters.Status is not null)
+            {
+                query = query.Where(record => record.Status == filters.Status);
+            }
+
+            if (filters.Type is not null)
+            {
+                query = query.Where(record => record.Type == filters.Type);
+            }
+
+            if (filters.AiStatus is not null)
+            {
+                query = query.Where(record => record.AiStatus == filters.AiStatus);
+            }
+
+            return query;
         }
     }
 

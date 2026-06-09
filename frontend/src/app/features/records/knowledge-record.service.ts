@@ -22,21 +22,63 @@ export interface PagedKnowledgeRecordResponse {
   totalPages: number;
 }
 
+export interface KnowledgeRecordListFilters {
+  search?: string;
+  category?: string;
+  status?: number;
+  type?: number;
+  aiStatus?: number;
+}
+
 @Injectable({ providedIn: 'root' })
 export class KnowledgeRecordService {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = '/api/v1/records';
 
-  list(page = 1, pageSize = 20): Observable<PagedKnowledgeRecordResponse> {
+  list(
+    page = 1,
+    pageSize = 20,
+    filters: KnowledgeRecordListFilters = {}
+  ): Observable<PagedKnowledgeRecordResponse> {
     return this.http.get<PagedKnowledgeRecordResponse>(this.baseUrl, {
-      params: {
-        page,
-        pageSize
-      }
+      params: this.buildListParams(page, pageSize, filters)
     });
   }
 
   delete(id: string): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${id}`);
+  }
+
+  private buildListParams(
+    page: number,
+    pageSize: number,
+    filters: KnowledgeRecordListFilters
+  ): Record<string, string | number> {
+    const params: Record<string, string | number> = {
+        page,
+        pageSize
+    };
+
+    if (filters.search) {
+      params['search'] = filters.search;
+    }
+
+    if (filters.category) {
+      params['category'] = filters.category;
+    }
+
+    if (filters.status !== undefined) {
+      params['status'] = filters.status;
+    }
+
+    if (filters.type !== undefined) {
+      params['type'] = filters.type;
+    }
+
+    if (filters.aiStatus !== undefined) {
+      params['aiStatus'] = filters.aiStatus;
+    }
+
+    return params;
   }
 }

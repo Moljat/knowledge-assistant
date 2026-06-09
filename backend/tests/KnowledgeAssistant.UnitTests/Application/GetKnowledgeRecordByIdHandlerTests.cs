@@ -60,6 +60,7 @@ public sealed class GetKnowledgeRecordByIdHandlerTests
         }
 
         public Task<PagedKnowledgeRecordResult> ListAsync(
+            KnowledgeRecordListFilters filters,
             int page,
             int pageSize,
             CancellationToken cancellationToken = default)

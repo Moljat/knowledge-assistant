@@ -34,15 +34,18 @@ public sealed class KnowledgeRecordRepository(KnowledgeAssistantDbContext contex
     }
 
     public async Task<PagedKnowledgeRecordResult> ListAsync(
+        KnowledgeRecordListFilters filters,
         int page,
         int pageSize,
         CancellationToken cancellationToken = default)
     {
-        var totalItems = await context.KnowledgeRecords
-            .AsNoTracking()
+        var query = ApplyFilters(
+            context.KnowledgeRecords.AsNoTracking(),
+            filters);
+
+        var totalItems = await query
             .CountAsync(cancellationToken);
-        var items = await context.KnowledgeRecords
-            .AsNoTracking()
+        var items = await query
             .OrderByDescending(record => record.CreatedAtUtc)
             .ThenBy(record => record.Title)
             .Skip((page - 1) * pageSize)
@@ -54,6 +57,42 @@ public sealed class KnowledgeRecordRepository(KnowledgeAssistantDbContext contex
             page,
             pageSize,
             totalItems);
+    }
+
+    private static IQueryable<KnowledgeRecord> ApplyFilters(
+        IQueryable<KnowledgeRecord> query,
+        KnowledgeRecordListFilters filters)
+    {
+        if (filters.Search is not null)
+        {
+            query = query.Where(record =>
+                record.Title.Contains(filters.Search)
+                || record.Content.Contains(filters.Search)
+                || (record.Source != null && record.Source.Contains(filters.Search))
+                || (record.Category != null && record.Category.Contains(filters.Search)));
+        }
+
+        if (filters.Category is not null)
+        {
+            query = query.Where(record => record.Category == filters.Category);
+        }
+
+        if (filters.Status is not null)
+        {
+            query = query.Where(record => record.Status == filters.Status);
+        }
+
+        if (filters.Type is not null)
+        {
+            query = query.Where(record => record.Type == filters.Type);
+        }
+
+        if (filters.AiStatus is not null)
+        {
+            query = query.Where(record => record.AiStatus == filters.AiStatus);
+        }
+
+        return query;
     }
 
     public void Add(KnowledgeRecord record)

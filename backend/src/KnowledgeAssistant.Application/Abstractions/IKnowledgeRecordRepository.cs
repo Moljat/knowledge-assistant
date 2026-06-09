@@ -17,6 +17,7 @@ public interface IKnowledgeRecordRepository
         CancellationToken cancellationToken = default);
 
     Task<PagedKnowledgeRecordResult> ListAsync(
+        KnowledgeRecordListFilters filters,
         int page,
         int pageSize,
         CancellationToken cancellationToken = default);
@@ -31,3 +32,10 @@ public sealed record PagedKnowledgeRecordResult(
     int Page,
     int PageSize,
     int TotalItems);
+
+public sealed record KnowledgeRecordListFilters(
+    string? Search,
+    string? Category,
+    KnowledgeRecordStatus? Status,
+    KnowledgeRecordType? Type,
+    AiProcessingStatus? AiStatus);
