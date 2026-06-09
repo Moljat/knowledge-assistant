@@ -44,3 +44,10 @@
 | TC-040 | API | Consultar detalle inexistente | Responde 404 con ProblemDetails |
 | TC-041 | API | Listar registros paginados | Responde 200 con items y totales |
 | TC-042 | API | Listar con paginacion invalida | Responde 400 con ValidationProblemDetails |
+| TC-043 | Aplicacion | Editar registro existente | Actualiza campos y guarda cambios |
+| TC-044 | Aplicacion | Editar registro inexistente | Devuelve resultado nulo sin guardar |
+| TC-045 | Aplicacion | Editar con datos invalidos | Rechaza cambios sin guardar |
+| TC-046 | Aplicacion | Editar contenido analizado | Invalida resultados previos de IA |
+| TC-047 | API | Editar registro valido | Responde 200 con el registro actualizado |
+| TC-048 | API | Editar registro inexistente | Responde 404 con ProblemDetails |
+| TC-049 | API | Editar registro invalido | Responde 400 con ValidationProblemDetails |
