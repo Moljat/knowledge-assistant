@@ -16,6 +16,11 @@ dotnet test KnowledgeAssistant.sln
 dotnet test KnowledgeAssistant.sln --collect:"XPlat Code Coverage"
 ```
 
+Para la métrica objetivo de lógica se combinan por archivo y número de línea los reportes
+Cobertura de pruebas unitarias e integración, tomando una línea como cubierta si cualquiera
+de las suites la ejecuta. El alcance medido es `KnowledgeAssistant.Domain` y
+`KnowledgeAssistant.Application`.
+
 Las pruebas que requieren SQL Server usan `KNOWLEDGE_ASSISTANT_TEST_CONNECTION`. Cuando la
 variable no existe se reportan como omitidas; en CI deberán ejecutarse contra un servicio SQL.
 
@@ -37,6 +42,17 @@ npm --workspace frontend run test:ci
 - Todo defecto corregido debe incluir una prueba de regresión.
 - Las pruebas no dependen de una llave real de Mistral salvo la suite marcada como externa.
 - Las evidencias de entrega se guardarán en `documentation/evidence/`.
+
+## Cobertura actual
+
+Medición del 9 de junio de 2026:
+
+- Domain + Application: 95.4% de líneas (503/527).
+- Frontend: 86.2% de statements, 59.25% de branches, 80.35% de functions y 88.07% de lines.
+
+Los huecos de mayor riesgo cerrados fueron el chat con contexto, las métricas del dashboard,
+el panel de análisis IA y el chat global. Las ramas residuales pertenecen principalmente a
+variaciones de filtros y estados visuales ya cubiertos por recorridos representativos.
 
 ## Flujos end-to-end críticos
 
