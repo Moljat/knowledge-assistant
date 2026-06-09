@@ -1,5 +1,12 @@
 # Pruebas de frontend
 
-Las pruebas unitarias se mantienen junto a sus componentes y servicios con archivos
-`*.spec.ts`. Esta carpeta alojará fixtures y pruebas de integración o end-to-end cuando se
-incorpore el flujo CRUD.
+Las pruebas unitarias y de integración de UI se mantienen junto a componentes y servicios con
+archivos `*.spec.ts`. Cubren navegación, dashboard, CRUD, filtros, formularios, panel de IA,
+chat global y cliente HTTP.
+
+La ejecución headless se realiza con:
+
+```powershell
+cd frontend
+node scripts/resolve-browser.mjs --watch=false --browsers=ChromeHeadless --code-coverage
+```

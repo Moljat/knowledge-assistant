@@ -1,13 +1,14 @@
 # Knowledge Assistant
 
 Plataforma interna para registrar información empresarial y enriquecerla con Inteligencia
-Artificial. Permitirá administrar registros, resumirlos, clasificarlos, generar recomendaciones
+Artificial. Permite administrar registros, resumirlos, clasificarlos, generar recomendaciones
 y responder preguntas sobre la información almacenada mediante la API real de Mistral.
 
 ## Estado
 
-El repositorio contiene el scaffold inicial y la planeación técnica. La implementación funcional
-se realizará por tareas pequeñas documentadas en [TASK.md](TASK.md).
+La implementación funcional está completa. Incluye CRUD, búsqueda, filtros, dashboard,
+análisis con Mistral, chat contextual, procesamiento en segundo plano, pruebas automatizadas,
+CI y evidencias de entrega.
 
 ## Stack
 
@@ -36,16 +37,16 @@ Consulta [documentation/architecture.md](documentation/architecture.md) para el 
 ## Inicio rápido
 
 1. Copia `.env.example` como `.env` y configura `SQL_SA_PASSWORD`.
-2. Agrega `MISTRAL_API_KEY` cuando iniciemos la integración de IA.
+2. Agrega `MISTRAL_API_KEY` para habilitar las funciones de IA.
 3. Restaura herramientas .NET con `dotnet tool restore`.
-4. Instala dependencias con `npm install`.
-5. Ejecuta el backend con `npm run start:backend`.
-6. Ejecuta el frontend con `npm run start:frontend`.
+4. En `frontend`, instala dependencias con `npm ci --workspaces=false`.
+5. Desde la raíz, ejecuta el backend con `npm run start:backend`.
+6. Desde la raíz, ejecuta el frontend con `npm run start:frontend`.
 
 Para levantar la solución completa:
 
 ```powershell
-docker-compose up --build
+docker compose up --build
 ```
 
 El frontend quedará en `http://localhost:4200` y la API en
@@ -61,8 +62,10 @@ o secretos de usuario de .NET; Docker Compose leerá el archivo `.env`.
 - [Plan de trabajo](TASK.md)
 - [Estrategia de pruebas](TESTING.md)
 - [Arquitectura](documentation/architecture.md)
-- [API prevista](documentation/api.md)
+- [Contrato API](documentation/api.md)
 - [Decisiones técnicas](documentation/decisions.md)
 - [Integración de IA](documentation/ai.md)
 - [Instalación técnica](documentation/technical.md)
 - [Uso operativo](documentation/operations.md)
+- [Evidencias](documentation/evidence/README.md)
+- [Checklist de entrega](documentation/delivery.md)

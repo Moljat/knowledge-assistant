@@ -1,10 +1,14 @@
-# API prevista
+# Contrato API
 
 Prefijo base: `/api/v1`.
 
 ## Sistema
 
 - `GET /system/health`: disponibilidad de la API.
+
+## Dashboard
+
+- `GET /dashboard/stats`: totales por estado, tipo y procesamiento de IA.
 
 ## Registros
 
@@ -42,6 +46,11 @@ Respuesta `201 Created`:
   "type": 1,
   "status": 1,
   "aiStatus": 0,
+  "summary": null,
+  "category": null,
+  "recommendations": null,
+  "aiError": null,
+  "aiProcessedAtUtc": null,
   "createdAtUtc": "2026-06-09T18:00:00+00:00",
   "updatedAtUtc": "2026-06-09T18:00:00+00:00"
 }
@@ -115,9 +124,12 @@ existe responde `404 Not Found` con `ProblemDetails`.
 - `POST /records/{id}/ai/classification`: clasificar.
 - `POST /records/{id}/ai/recommendations`: generar recomendaciones.
 - `POST /records/{id}/ai/questions`: responder una pregunta sobre el registro.
+- `POST /ai/chat`: responder una pregunta usando los registros almacenados como contexto.
 
-Las respuestas de error usarán `application/problem+json`. El contrato final se publicará
-mediante OpenAPI y se actualizará junto con cada caso de uso.
+Las preguntas son obligatorias y aceptan hasta 1000 caracteres. Los errores del proveedor se
+traducen a `ProblemDetails` sin exponer prompts, respuestas ni credenciales.
+
+El contrato OpenAPI se publica en desarrollo en `/openapi/v1.json`.
 
 ## Errores estandarizados
 
