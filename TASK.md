@@ -34,11 +34,13 @@ Las tareas están ordenadas para producir incrementos pequeños y demostrables.
 - [x] `T3.3` Implementar tabla paginada, búsqueda y filtros.
 - [x] `T3.4` Implementar formulario reactivo de alta y edición.
 - [x] `T3.5` Agregar estados de carga, vacíos y errores.
-- [ ] `T3.6` Probar componentes, servicios e interacciones.
+- [x] `T3.6` Probar componentes, servicios e interacciones.
+
+### ✅ Fase 3 completada
 
 ## Fase 4: Mistral e IA
 
-- [ ] `T4.1` Configurar cliente Mistral y manejo seguro de credenciales.
+- [x] `T4.1` Configurar cliente Mistral y manejo seguro de credenciales.
 - [ ] `T4.2` Diseñar prompts reutilizables y respuestas JSON estructuradas.
 - [ ] `T4.3` Implementar resumen inteligente.
 - [ ] `T4.4` Implementar clasificación automática.
