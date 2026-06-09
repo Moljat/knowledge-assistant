@@ -3,6 +3,7 @@
 Esta carpeta reúne la documentación obligatoria de la prueba técnica.
 
 - `architecture.md`: arquitectura, capas y flujo de información.
+- `domain-model.md`: agregado principal, estados e invariantes.
 - `technical.md`: instalación, configuración, migraciones y ejecución.
 - `operations.md`: uso previsto y casos de uso.
 - `ai.md`: proveedor, prompts, controles y limitaciones.

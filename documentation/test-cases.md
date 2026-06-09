@@ -12,3 +12,9 @@
 | TC-008 | IA | Respuesta JSON inválida | No persiste análisis inconsistente |
 | TC-009 | UI | Formulario inválido | Bloquea envío y muestra mensajes |
 | TC-010 | UI | Error HTTP | Muestra estado recuperable al usuario |
+| TC-011 | Dominio | Archivar registro | Queda inmutable hasta restaurarlo |
+| TC-012 | Dominio | Modificar contenido analizado | Invalida resultados anteriores de IA |
+| TC-013 | Dominio | Completar análisis sin resultados | Se rechaza por regla de negocio |
+| TC-014 | Dominio | Flujo de análisis válido | Avanza de pendiente a completado |
+| TC-015 | Dominio | Actualización con tipo inválido | Falla sin modificar parcialmente |
+| TC-016 | Dominio | Archivar durante análisis | Se rechaza hasta finalizar el proceso |
