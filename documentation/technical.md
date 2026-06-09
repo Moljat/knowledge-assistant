@@ -48,3 +48,14 @@ dotnet ef migrations script --idempotent --project backend/src/KnowledgeAssistan
 La fábrica de diseño usa `ConnectionStrings__DefaultConnection` cuando está definida y
 LocalDB como alternativa para generar migraciones. También acepta
 `-- --connection=<connection-string>`.
+
+## Pruebas físicas de persistencia
+
+Las pruebas de repositorio requieren una instancia SQL Server migrada. Configure:
+
+```powershell
+$env:KNOWLEDGE_ASSISTANT_TEST_CONNECTION="Server=localhost,1433;Database=KnowledgeAssistantValidation;User Id=sa;Password=<password>;Encrypt=False;TrustServerCertificate=True"
+dotnet test backend/tests/KnowledgeAssistant.IntegrationTests
+```
+
+Sin la variable, las pruebas físicas se omiten. Cada caso usa una transacción que se revierte.

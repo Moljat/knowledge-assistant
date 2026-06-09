@@ -33,6 +33,16 @@ flowchart LR
 4. Infrastructure persiste en SQL Server o invoca Mistral.
 5. La API devuelve DTO y errores consistentes con `ProblemDetails`.
 
+## Persistencia
+
+Application define `IKnowledgeRecordRepository` e `IUnitOfWork`. Infrastructure implementa
+ambos con EF Core:
+
+- Las lecturas normales usan `AsNoTracking`.
+- Las operaciones de actualización solicitan explícitamente una entidad tracked.
+- `IUnitOfWork` controla cuándo se confirma un caso de uso mediante `SaveChangesAsync`.
+- Las pruebas físicas se ejecutan dentro de transacciones revertidas.
+
 ## Escalabilidad
 
 La primera versión es un monolito modular. Los límites de Application permiten extraer

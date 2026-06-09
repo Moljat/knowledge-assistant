@@ -20,3 +20,6 @@
 | TC-016 | Dominio | Archivar durante análisis | Se rechaza hasta finalizar el proceso |
 | TC-017 | Persistencia | Inspeccionar modelo EF Core | Tabla, columnas e índices coinciden con el dominio |
 | TC-018 | Persistencia | Generar script idempotente | Incluye historial y migración inicial |
+| TC-019 | Repositorio | Agregar y consultar registro | Persiste y devuelve una entidad sin tracking |
+| TC-020 | Repositorio | Consultar para actualización | Mantiene tracking y guarda los cambios |
+| TC-021 | Repositorio | Eliminar registro | La unidad de trabajo confirma la eliminación |

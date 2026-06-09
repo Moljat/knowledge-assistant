@@ -1,5 +1,7 @@
+using KnowledgeAssistant.Application.Abstractions;
 using KnowledgeAssistant.Infrastructure.Ai;
 using KnowledgeAssistant.Infrastructure.Persistence;
+using KnowledgeAssistant.Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,6 +23,9 @@ public static class DependencyInjection
                 connectionString,
                 sqlServer => sqlServer.MigrationsAssembly(
                     typeof(KnowledgeAssistantDbContext).Assembly.FullName)));
+
+        services.AddScoped<IKnowledgeRecordRepository, KnowledgeRecordRepository>();
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services
             .AddOptions<MistralOptions>()
