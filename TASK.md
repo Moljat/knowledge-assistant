@@ -30,7 +30,7 @@ Las tareas están ordenadas para producir incrementos pequeños y demostrables.
 
 - [x] `T3.0` Corregir entorno frontend para ejecutar `ng build` y `ng test` sin errores de resolución.
 - [x] `T3.1` Crear layout responsive y navegación.
-- [ ] `T3.2` Implementar dashboard con indicadores.
+- [x] `T3.2` Implementar dashboard con indicadores.
 - [ ] `T3.3` Implementar tabla paginada, búsqueda y filtros.
 - [ ] `T3.4` Implementar formulario reactivo de alta y edición.
 - [ ] `T3.5` Agregar estados de carga, vacíos y errores.
