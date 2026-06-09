@@ -2,18 +2,17 @@
 
 Aplicación Angular 20 con componentes standalone y Angular Material.
 
-## Estructura prevista
+## Estructura
 
-- `core`: configuración transversal, interceptores y clientes.
-- `shared`: componentes reutilizables.
-- `features/dashboard`: indicadores principales.
-- `features/records`: CRUD, búsqueda y filtros.
-- `features/ai`: resumen, clasificación, recomendaciones y preguntas.
+- `app.config.ts`: proveedores y configuración transversal.
+- `features/dashboard`: indicadores y chat global.
+- `features/records`: CRUD, búsqueda, filtros y panel de IA.
+- `knowledge-record.service.ts`: único cliente HTTP usado por los componentes.
 
 ## Comandos
 
 ```powershell
-npm install
+npm ci --workspaces=false
 npm start
 npm run build
 npm run test:ci

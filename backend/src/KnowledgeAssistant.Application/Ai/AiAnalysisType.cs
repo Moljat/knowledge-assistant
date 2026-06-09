@@ -5,5 +5,6 @@ public enum AiAnalysisType
     Summary,
     Classification,
     Recommendations,
-    Question
+    Question,
+    Chat
 }

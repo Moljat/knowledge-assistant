@@ -2,8 +2,8 @@
 
 ## Proveedor
 
-Mistral API. El modelo inicial configurable será `mistral-small-latest`; no se codificará un
-modelo fijo en los casos de uso.
+Mistral API. El modelo configurable predeterminado es `mistral-small-latest`; los casos de uso
+no dependen de un modelo fijo ni de un SDK externo.
 
 ## Estrategia de prompts
 
@@ -11,7 +11,7 @@ modelo fijo en los casos de uso.
 - Solicitar JSON estructurado cuando la salida alimente lógica de la aplicación.
 - Incluir identificadores y contenido mínimo necesario.
 - No enviar secretos ni datos ajenos al registro seleccionado.
-- Versionar plantillas de prompt y probar su contrato.
+- Mantener plantillas de prompt reutilizables y probar su contrato.
 
 ## Controles
 
@@ -21,9 +21,11 @@ modelo fijo en los casos de uso.
 - Manejo explícito de `429` y errores del proveedor.
 - Validación de JSON y rechazo de respuestas incompletas.
 - Registro de metadatos técnicos sin almacenar la llave.
+- Hasta tres reintentos con espera incremental para fallos transitorios.
+- Procesamiento en segundo plano de registros pendientes con idempotencia.
 
 ## Limitaciones conocidas
 
 Los modelos pueden alucinar, clasificar incorrectamente o producir formatos inesperados. Las
-salidas se mostrarán como asistencia, conservarán trazabilidad y no reemplazarán el contenido
-fuente.
+salidas se muestran como asistencia y no reemplazan el contenido fuente. La aplicación requiere
+una llave real para producción; las respuestas simuladas existen únicamente en pruebas.

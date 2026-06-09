@@ -21,19 +21,69 @@ h1 {
   letter-spacing: -0.03em;
 }
 
-.page-heading p:last-child,
-.empty-state {
-  color: var(--mat-sys-on-surface-variant);
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.filters mat-form-field {
+  flex: 1 1 180px;
+  min-width: 140px;
+}
+
+.loading-state {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 64px 24px;
 }
 
 .empty-state {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
   padding: 48px 24px;
   text-align: center;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+.records-table {
+  width: 100%;
+}
+
+.cell-title {
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.cell-content {
+  color: var(--mat-sys-on-surface-variant);
+  font-size: 13px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 360px;
 }
 
 @media (max-width: 600px) {
   .page-heading {
     align-items: stretch;
     flex-direction: column;
+  }
+
+  .filters {
+    flex-direction: column;
+  }
+
+  .filters mat-form-field {
+    flex: 1 1 auto;
   }
 }

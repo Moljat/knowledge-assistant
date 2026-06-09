@@ -17,17 +17,70 @@ por ejemplo `Mistral__ApiKey`.
 ```powershell
 dotnet restore KnowledgeAssistant.sln
 dotnet run --project backend/src/KnowledgeAssistant.Api
-npm install
-npm --workspace frontend start
+cd frontend
+npm ci --workspaces=false
+npm start
 ```
+
+La API expone OpenAPI en desarrollo mediante `/openapi/v1.json`.
+
+Para ejecutar el stack completo con migraciones y datos semilla:
+
+```powershell
+docker compose up --build
+```
+
+El frontend queda disponible en `http://localhost:4200` y la API en
+`http://localhost:8080`.
 
 ## Migraciones
 
-Las migraciones vivirán en `KnowledgeAssistant.Infrastructure/Migrations`.
+Las migraciones viven en
+`backend/src/KnowledgeAssistant.Infrastructure/Persistence/Migrations`.
+
+La versión de `dotnet-ef` está fijada en `.config/dotnet-tools.json`. Después de clonar:
 
 ```powershell
-dotnet ef migrations add InitialCreate --project backend/src/KnowledgeAssistant.Infrastructure --startup-project backend/src/KnowledgeAssistant.Api
-dotnet ef database update --project backend/src/KnowledgeAssistant.Infrastructure --startup-project backend/src/KnowledgeAssistant.Api
+dotnet tool restore
+dotnet ef database update --project backend/src/KnowledgeAssistant.Infrastructure
 ```
 
-Estos comandos se habilitarán en la fase de persistencia.
+Para crear una migración posterior:
+
+```powershell
+dotnet ef migrations add MigrationName --project backend/src/KnowledgeAssistant.Infrastructure --output-dir Persistence/Migrations
+```
+
+Para regenerar el script SQL idempotente:
+
+```powershell
+dotnet ef migrations script --idempotent --project backend/src/KnowledgeAssistant.Infrastructure --output backend/database/initial-schema.sql
+```
+
+La fábrica de diseño usa `ConnectionStrings__DefaultConnection` cuando está definida y
+LocalDB como alternativa para generar migraciones. También acepta
+`-- --connection=<connection-string>`.
+
+## Pruebas físicas de persistencia
+
+Las pruebas de repositorio requieren una instancia SQL Server migrada. Configure:
+
+```powershell
+$env:KNOWLEDGE_ASSISTANT_TEST_CONNECTION="Server=localhost,1433;Database=KnowledgeAssistantValidation;User Id=sa;Password=<password>;Encrypt=False;TrustServerCertificate=True"
+dotnet test backend/tests/KnowledgeAssistant.IntegrationTests
+```
+
+Sin la variable, las pruebas físicas se omiten. Cada caso usa una transacción que se revierte.
+
+## Inicialización y semillas
+
+La inicialización automática está desactivada por defecto:
+
+```text
+DatabaseInitialization__Enabled=false
+SeedData__Enabled=false
+```
+
+Docker Compose activa ambas variables. Al iniciar la API, primero aplica migraciones pendientes
+y después inserta tres registros demo. El proceso de semillas es idempotente y no duplica
+registros ya existentes con la fuente técnica `Knowledge Assistant Demo Seed v1`.

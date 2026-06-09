@@ -28,6 +28,8 @@ services:
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_URLS: http://+:8080
       ConnectionStrings__DefaultConnection: Server=sqlserver,1433;Database=${SQL_DATABASE:-KnowledgeAssistant};User Id=sa;Password=${SQL_SA_PASSWORD};TrustServerCertificate=True
+      DatabaseInitialization__Enabled: ${DATABASE_INITIALIZATION_ENABLED:-true}
+      SeedData__Enabled: ${SEED_DATA_ENABLED:-true}
       Mistral__ApiKey: ${MISTRAL_API_KEY:-}
       Mistral__Model: ${MISTRAL_MODEL:-mistral-small-latest}
       Mistral__BaseUrl: ${MISTRAL_BASE_URL:-https://api.mistral.ai/v1}

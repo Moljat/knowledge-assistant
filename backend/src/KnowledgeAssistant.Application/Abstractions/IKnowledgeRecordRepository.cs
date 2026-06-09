@@ -8,9 +8,37 @@ public interface IKnowledgeRecordRepository
         Guid id,
         CancellationToken cancellationToken = default);
 
+    Task<KnowledgeRecord?> GetByIdForUpdateAsync(
+        Guid id,
+        CancellationToken cancellationToken = default);
+
+    Task<bool> ExistsAsync(
+        Guid id,
+        CancellationToken cancellationToken = default);
+
+    Task<PagedKnowledgeRecordResult> ListAsync(
+        KnowledgeRecordListFilters filters,
+        int page,
+        int pageSize,
+        CancellationToken cancellationToken = default);
+
+    Task<DashboardStats> GetDashboardStatsAsync(
+        CancellationToken cancellationToken = default);
+
     void Add(KnowledgeRecord record);
 
     void Remove(KnowledgeRecord record);
-
-    Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }
+
+public sealed record PagedKnowledgeRecordResult(
+    IReadOnlyList<KnowledgeRecord> Items,
+    int Page,
+    int PageSize,
+    int TotalItems);
+
+public sealed record KnowledgeRecordListFilters(
+    string? Search,
+    string? Category,
+    KnowledgeRecordStatus? Status,
+    KnowledgeRecordType? Type,
+    AiProcessingStatus? AiStatus);

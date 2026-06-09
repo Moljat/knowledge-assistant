@@ -12,8 +12,7 @@ RUN dotnet restore backend/src/KnowledgeAssistant.Api/KnowledgeAssistant.Api.csp
 COPY backend/ backend/
 RUN dotnet publish backend/src/KnowledgeAssistant.Api/KnowledgeAssistant.Api.csproj \
     --configuration Release \
-    --output /app/publish \
-    --no-restore
+    --output /app/publish
 
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS runtime
 WORKDIR /app
