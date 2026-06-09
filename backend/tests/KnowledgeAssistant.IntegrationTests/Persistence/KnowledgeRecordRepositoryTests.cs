@@ -12,6 +12,9 @@ namespace KnowledgeAssistant.IntegrationTests.Persistence;
 [Collection(SqlServerCollection.Name)]
 public sealed class KnowledgeRecordRepositoryTests(SqlServerFixture fixture)
 {
+    private static readonly DateTimeOffset InitialTime =
+        new(2026, 6, 9, 12, 0, 0, TimeSpan.Zero);
+
     [SqlServerFact]
     public async Task AddAndGetById_PersistsRecordAndReturnsUntrackedEntity()
     {
@@ -86,6 +89,51 @@ public sealed class KnowledgeRecordRepositoryTests(SqlServerFixture fixture)
         await unitOfWork.SaveChangesAsync();
 
         Assert.False(await repository.ExistsAsync(record.Id));
+    }
+
+    [SqlServerFact]
+    public async Task AddAndGetById_PersistsLifecycleAndAiResultFields()
+    {
+        await using var context = fixture.CreateContext();
+        await using var transaction = await context.Database.BeginTransactionAsync();
+        var repository = new KnowledgeRecordRepository(context);
+        var unitOfWork = new UnitOfWork(context);
+        var record = KnowledgeRecord.Create(
+            $"Analyzed record {Guid.NewGuid():N}",
+            "Physical SQL Server lifecycle validation.",
+            "Integration tests",
+            KnowledgeRecordType.Document,
+            InitialTime);
+        var activatedAt = InitialTime.AddMinutes(1);
+        var requestedAt = InitialTime.AddMinutes(2);
+        var startedAt = InitialTime.AddMinutes(3);
+        var completedAt = InitialTime.AddMinutes(4);
+
+        record.Activate(activatedAt);
+        record.RequestAiAnalysis(requestedAt);
+        record.StartAiAnalysis(startedAt);
+        record.CompleteAiAnalysis(
+            "Resumen persistido",
+            "Operaciones",
+            "Revisar seguimiento",
+            completedAt);
+
+        repository.Add(record);
+        await unitOfWork.SaveChangesAsync();
+        context.ChangeTracker.Clear();
+
+        var persisted = await repository.GetByIdAsync(record.Id);
+
+        Assert.NotNull(persisted);
+        Assert.Equal(KnowledgeRecordStatus.Active, persisted.Status);
+        Assert.Equal(AiProcessingStatus.Completed, persisted.AiStatus);
+        Assert.Equal("Resumen persistido", persisted.Summary);
+        Assert.Equal("Operaciones", persisted.Category);
+        Assert.Equal("Revisar seguimiento", persisted.Recommendations);
+        Assert.Null(persisted.AiError);
+        Assert.Equal(InitialTime, persisted.CreatedAtUtc);
+        Assert.Equal(completedAt, persisted.UpdatedAtUtc);
+        Assert.Equal(completedAt, persisted.AiProcessedAtUtc);
     }
 
     private static KnowledgeRecord CreateRecord()

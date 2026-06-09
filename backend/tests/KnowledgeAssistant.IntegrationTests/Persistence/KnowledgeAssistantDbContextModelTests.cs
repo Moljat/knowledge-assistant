@@ -28,6 +28,41 @@ public sealed class KnowledgeAssistantDbContextModelTests
     }
 
     [Theory]
+    [InlineData(nameof(KnowledgeRecord.Title), KnowledgeRecord.MaxTitleLength)]
+    [InlineData(nameof(KnowledgeRecord.Content), KnowledgeRecord.MaxContentLength)]
+    [InlineData(nameof(KnowledgeRecord.Source), KnowledgeRecord.MaxSourceLength)]
+    [InlineData(nameof(KnowledgeRecord.Category), KnowledgeRecord.MaxCategoryLength)]
+    [InlineData(nameof(KnowledgeRecord.Summary), KnowledgeRecord.MaxSummaryLength)]
+    [InlineData(nameof(KnowledgeRecord.Recommendations), KnowledgeRecord.MaxRecommendationsLength)]
+    [InlineData(nameof(KnowledgeRecord.AiError), KnowledgeRecord.MaxAiErrorLength)]
+    public void KnowledgeRecord_ColumnLengthsMatchDomainLimits(
+        string propertyName,
+        int expectedMaxLength)
+    {
+        using var context = new KnowledgeAssistantDbContext(Options);
+        var property = context.Model
+            .FindEntityType(typeof(KnowledgeRecord))!
+            .FindProperty(propertyName)!;
+
+        Assert.Equal(expectedMaxLength, property.GetMaxLength());
+    }
+
+    [Theory]
+    [InlineData(nameof(KnowledgeRecord.CreatedAtUtc))]
+    [InlineData(nameof(KnowledgeRecord.UpdatedAtUtc))]
+    [InlineData(nameof(KnowledgeRecord.ArchivedAtUtc))]
+    [InlineData(nameof(KnowledgeRecord.AiProcessedAtUtc))]
+    public void KnowledgeRecord_DateColumnsUseUtcSecondPrecision(string propertyName)
+    {
+        using var context = new KnowledgeAssistantDbContext(Options);
+        var property = context.Model
+            .FindEntityType(typeof(KnowledgeRecord))!
+            .FindProperty(propertyName)!;
+
+        Assert.Equal(0, property.GetPrecision());
+    }
+
+    [Theory]
     [InlineData(nameof(KnowledgeRecord.Type))]
     [InlineData(nameof(KnowledgeRecord.Status))]
     [InlineData(nameof(KnowledgeRecord.AiStatus))]

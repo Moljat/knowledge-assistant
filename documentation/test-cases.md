@@ -26,3 +26,9 @@
 | TC-022 | Semillas | Primera ejecución | Inserta tres registros demo sin resultados de IA |
 | TC-023 | Semillas | Segunda ejecución | No crea registros duplicados |
 | TC-024 | Inicialización | Funcionalidad desactivada | No migra ni inserta datos automáticamente |
+| TC-025 | Dominio | Activar registro archivado | Se rechaza hasta restaurarlo |
+| TC-026 | Dominio | Restaurar registro no archivado | Se rechaza por transicion invalida |
+| TC-027 | Dominio | Resultado de IA excede limites | Se rechaza por validacion |
+| TC-028 | Persistencia | Limites de columnas EF Core | Coinciden con los limites del dominio |
+| TC-029 | Persistencia | Fechas UTC | Se configuran con precision de segundos |
+| TC-030 | Persistencia | Recargar registro analizado | Conserva estado, fechas y resultados de IA |
