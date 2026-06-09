@@ -44,10 +44,18 @@
 </section>
 
 @if (state$ | async; as state) {
-  @if (state.error) {
+  @if (state.loading) {
+    <div class="loading-state">
+      <mat-spinner diameter="40" />
+      <p>Cargando registros…</p>
+    </div>
+  } @else if (state.error) {
     <p class="empty-state">{{ state.error }}</p>
   } @else if (state.records.length === 0) {
-    <p class="empty-state">No hay registros para mostrar.</p>
+    <div class="empty-state">
+      <p>No hay registros para mostrar.</p>
+      <a mat-stroked-button routerLink="/records/new">Crear el primer registro</a>
+    </div>
   } @else {
     <div class="table-container">
       <table mat-table [dataSource]="state.records" class="records-table">

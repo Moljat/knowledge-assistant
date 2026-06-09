@@ -32,7 +32,7 @@ Las tareas están ordenadas para producir incrementos pequeños y demostrables.
 - [x] `T3.1` Crear layout responsive y navegación.
 - [x] `T3.2` Implementar dashboard con indicadores.
 - [x] `T3.3` Implementar tabla paginada, búsqueda y filtros.
-- [ ] `T3.4` Implementar formulario reactivo de alta y edición.
+- [x] `T3.4` Implementar formulario reactivo de alta y edición.
 - [ ] `T3.5` Agregar estados de carga, vacíos y errores.
 - [ ] `T3.6` Probar componentes, servicios e interacciones.
 

@@ -6,6 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { RouterLink } from '@angular/router';
@@ -36,6 +37,7 @@ import {
     MatFormFieldModule,
     MatInputModule,
     MatPaginatorModule,
+    MatProgressSpinnerModule,
     MatSelectModule,
     MatTableModule,
     ReactiveFormsModule,
@@ -108,14 +110,24 @@ export class RecordList {
     switchMap(([filters, page, pageSize]) =>
       this.records.list(page, pageSize, filters).pipe(
         map((response) => ({
+          loading: false,
           error: null,
           records: response.items,
           totalItems: response.totalItems,
           page: response.page,
           pageSize: response.pageSize,
         })),
+        startWith({
+          loading: true,
+          error: null,
+          records: [] as KnowledgeRecord[],
+          totalItems: 0,
+          page,
+          pageSize,
+        }),
         catchError(() =>
           of({
+            loading: false,
             error: 'No se pudieron cargar los registros.',
             records: [] as KnowledgeRecord[],
             totalItems: 0,
