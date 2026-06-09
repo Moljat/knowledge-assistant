@@ -1,3 +1,4 @@
+using KnowledgeAssistant.Api.Errors;
 using KnowledgeAssistant.Application.Records;
 using KnowledgeAssistant.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +12,8 @@ public sealed class RecordsController(
     IGetKnowledgeRecordByIdHandler getByIdHandler,
     IListKnowledgeRecordsHandler listHandler,
     IUpdateKnowledgeRecordHandler updateHandler,
-    IDeleteKnowledgeRecordHandler deleteHandler) : ControllerBase
+    IDeleteKnowledgeRecordHandler deleteHandler,
+    ILogger<RecordsController> logger) : ControllerBase
 {
     [HttpGet("{id:guid}")]
     [ProducesResponseType<KnowledgeRecordResponse>(StatusCodes.Status200OK)]
@@ -24,12 +26,7 @@ public sealed class RecordsController(
 
         if (record is null)
         {
-            return NotFound(new ProblemDetails
-            {
-                Status = StatusCodes.Status404NotFound,
-                Title = "Knowledge record not found.",
-                Detail = $"No knowledge record exists with id '{id}'."
-            });
+            return NotFound(CreateNotFoundProblem(id));
         }
 
         return Ok(KnowledgeRecordResponse.FromResult(record));
@@ -65,13 +62,17 @@ public sealed class RecordsController(
         }
         catch (ArgumentOutOfRangeException exception)
         {
-            ModelState.AddModelError(exception.ParamName ?? "pagination", exception.Message);
-            return ValidationProblem(ModelState);
+            logger.LogWarning(
+                exception,
+                "Rejected record listing because pagination is invalid.");
+            return CreateValidationProblem(exception, "pagination");
         }
         catch (ArgumentException exception)
         {
-            ModelState.AddModelError(exception.ParamName ?? "filters", exception.Message);
-            return ValidationProblem(ModelState);
+            logger.LogWarning(
+                exception,
+                "Rejected record listing because filters are invalid.");
+            return CreateValidationProblem(exception, "filters");
         }
     }
 
@@ -93,12 +94,13 @@ public sealed class RecordsController(
                 cancellationToken);
 
             var response = KnowledgeRecordResponse.FromResult(record);
+            logger.LogInformation("Created knowledge record {RecordId}.", response.Id);
             return Created($"/api/v1/records/{response.Id}", response);
         }
         catch (ArgumentException exception)
         {
-            ModelState.AddModelError(exception.ParamName ?? "request", exception.Message);
-            return ValidationProblem(ModelState);
+            logger.LogWarning(exception, "Rejected record creation because payload is invalid.");
+            return CreateValidationProblem(exception, "request");
         }
     }
 
@@ -124,29 +126,29 @@ public sealed class RecordsController(
 
             if (record is null)
             {
-                return NotFound(new ProblemDetails
-                {
-                    Status = StatusCodes.Status404NotFound,
-                    Title = "Knowledge record not found.",
-                    Detail = $"No knowledge record exists with id '{id}'."
-                });
+                return NotFound(CreateNotFoundProblem(id));
             }
 
+            logger.LogInformation("Updated knowledge record {RecordId}.", id);
             return Ok(KnowledgeRecordResponse.FromResult(record));
         }
         catch (ArgumentException exception)
         {
-            ModelState.AddModelError(exception.ParamName ?? "request", exception.Message);
-            return ValidationProblem(ModelState);
+            logger.LogWarning(
+                exception,
+                "Rejected update for knowledge record {RecordId} because payload is invalid.",
+                id);
+            return CreateValidationProblem(exception, "request");
         }
         catch (InvalidOperationException exception)
         {
-            return BadRequest(new ProblemDetails
-            {
-                Status = StatusCodes.Status400BadRequest,
-                Title = "Knowledge record cannot be updated.",
-                Detail = exception.Message
-            });
+            logger.LogWarning(
+                exception,
+                "Rejected update for knowledge record {RecordId} because a business rule failed.",
+                id);
+            return BadRequest(CreateBusinessRuleProblem(
+                "Knowledge record cannot be updated.",
+                exception.Message));
         }
     }
 
@@ -161,15 +163,62 @@ public sealed class RecordsController(
 
         if (!deleted)
         {
-            return NotFound(new ProblemDetails
-            {
-                Status = StatusCodes.Status404NotFound,
-                Title = "Knowledge record not found.",
-                Detail = $"No knowledge record exists with id '{id}'."
-            });
+            return NotFound(CreateNotFoundProblem(id));
         }
 
+        logger.LogInformation("Deleted knowledge record {RecordId}.", id);
         return NoContent();
+    }
+
+    private ActionResult CreateValidationProblem(
+        ArgumentException exception,
+        string fallbackKey)
+    {
+        var key = exception.ParamName ?? fallbackKey;
+        var problem = new ValidationProblemDetails(
+            new Dictionary<string, string[]>
+            {
+                [key] = [exception.Message]
+            })
+        {
+            Status = StatusCodes.Status400BadRequest,
+            Title = "One or more validation errors occurred.",
+            Type = ApiProblemTypes.Validation
+        };
+        problem.AddTraceId(HttpContext);
+
+        return new BadRequestObjectResult(problem)
+        {
+            ContentTypes = { "application/problem+json" }
+        };
+    }
+
+    private ProblemDetails CreateNotFoundProblem(Guid id)
+    {
+        var problem = new ProblemDetails
+        {
+            Status = StatusCodes.Status404NotFound,
+            Title = "Knowledge record not found.",
+            Type = ApiProblemTypes.NotFound,
+            Detail = $"No knowledge record exists with id '{id}'."
+        };
+        problem.AddTraceId(HttpContext);
+
+        return problem;
+    }
+
+    private ProblemDetails CreateBusinessRuleProblem(string title, string detail)
+    {
+        var problem = new ProblemDetails
+        {
+            Status = StatusCodes.Status400BadRequest,
+            Title = title,
+            Type = ApiProblemTypes.BusinessRule,
+            Detail = detail
+        };
+        problem.AddTraceId(HttpContext);
+
+        return problem;
     }
 }
 
